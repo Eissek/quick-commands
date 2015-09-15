@@ -8,10 +8,27 @@
 ; wish to store, such as terminal commands.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (add-command
-         command desc tags)
-  (string-append command " " desc " " tags))
-
 
 (define (hello)
-  (display "Hello World"))
+  (print "Hello World"))
+
+
+
+(define (add-command . args)
+  ;; args stucture (command description tag1 tag2...)
+  (cond ((>= (length args) 3)
+         (print "Its more than or equal to 3")
+         ;; (print args)
+         (let ((command (car args))
+               (desc (car (cdr args)))
+               (tags (string-join (list-tail args 2) " ")))
+           (print command)
+           (print "desc " desc)
+           (print "Tags:" tags)))
+        ((= (length args) 2)
+         (print "its two"))
+        (else (print "Wrong number of arguments."))))
+
+
+
+
