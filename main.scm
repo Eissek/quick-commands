@@ -8,7 +8,7 @@
 ; wish to store, such as terminal commands.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+(require-extension sqlite3) 
 (define (hello)
   (print "Hello World"))
 
@@ -29,6 +29,9 @@
          (print "its two"))
         (else (print "Wrong number of arguments."))))
 
-
+(define (delete-command .args))
+(define (store-in-db .args))
+(define (search-commands))
+(define (list-stored-commands))
 
 
