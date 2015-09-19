@@ -64,8 +64,8 @@
     (lambda (x)
       (k "Command not found."))
     (lambda ()
-      (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?")
-            (delete-sql "DELETE FROM commands WHERE rowid = ?"))
+      (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?;")
+            (delete-sql "DELETE FROM commands WHERE rowid = ?;"))
         (let ((result (first-result qcommands-db sql rowid cmd)))
           (if (string? result)
               (begin
@@ -86,7 +86,6 @@
     (pp (string-join new-cmd " | "))))
 
 (define (list-stored-commands .)
-  ;; (qcommands-db)
   (for-each-row print-commands select-all)
   ;; (finalize! qcommands-db select-all)
   )
