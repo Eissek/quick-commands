@@ -44,8 +44,35 @@
     (string-join tags " ")
     (execute qcommands-db sql cmd desc (string-join tags " "))))
 
+(call-with-current-continuation
+ (lambda (k)
+   (with-exception-handler
+    (lambda (x)
+      (k 'Exception))
+    (lambda ()
+      (+ 1 (raise 'error))))))
+
+
+
+;; SELECT command FROM commands WHERE rowid = rowid;
+;; null?
 ;; insert command with no tags
-;; (define (delete-command .args))
+(define (delete-command rowid cmd)
+  (call-with-current-continuation
+ (lambda (k)
+   (with-exception-handler
+    (lambda (x)
+      (k "Command not found."))
+    (lambda ()
+      (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?")
+            (delete-sql "DELETE FROM commands WHERE rowid = ?"))
+        (let ((result (first-result qcommands-db sql rowid cmd)))
+          (if (string? result)
+              (begin
+                (print result)
+                (execute qcommands-db delete-sql rowid))))))))))
+
+
 ;; (define (store-in-db .args))
 ;; (define (search-commands))
 (define select-all
@@ -55,13 +82,14 @@
   (let ((new-cmd (append
                   (list (number->string (car cmd)))
                   (cdr cmd))))
-    (print new-cmd)
+    ;; (print new-cmd)
     (pp (string-join new-cmd " | "))))
 
 (define (list-stored-commands .)
   ;; (qcommands-db)
   (for-each-row print-commands select-all)
-  (finalize! qcommands-db select-all))
+  ;; (finalize! qcommands-db select-all)
+  )
 
 
 (define (add-command . args)
