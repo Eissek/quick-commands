@@ -42,18 +42,21 @@
 (define (insert-cmd cmd desc . tags)
   (let ((sql "INSERT INTO commands (Command, Description, Tags) VALUES (?,?,?)"))
     (string-join tags " ")
-    (execute qcommands-db sql cmd desc (string-join tags " "))
-    ))
+    (execute qcommands-db sql cmd desc (string-join tags " "))))
 
 ;; insert command with no tags
 ;; (define (delete-command .args))
 ;; (define (store-in-db .args))
 ;; (define (search-commands))
 (define select-all
-  (prepare qcommands-db "SELECT Command, Description, Tags FROM commands"))
+  (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands"))
 
 (define (print-commands . cmd)
-  (pp (string-join cmd " | ")))
+  (let ((new-cmd (append
+                  (list (number->string (car cmd)))
+                  (cdr cmd))))
+    (print new-cmd)
+    (pp (string-join new-cmd " | "))))
 
 (define (list-stored-commands .)
   ;; (qcommands-db)
@@ -76,8 +79,7 @@
              (print "Tags:" tags)
              (insert-cmd command desc tags)
              (if (row-inserted? row-count)
-                   (print "Added " command))
-             ))
+                   (print "Added " command))))
           ((= (length args) 2)
            (let ((command (car args))
                  (desc (car (cdr args))))
