@@ -44,18 +44,16 @@
     (string-join tags " ")
     (execute qcommands-db sql cmd desc (string-join tags " "))))
 
-(call-with-current-continuation
+#;(call-with-current-continuation
  (lambda (k)
    (with-exception-handler
-    (lambda (x)
-      (k 'Exception))
-    (lambda ()
-      (+ 1 (raise 'error))))))
+   (lambda (x)
+   (k 'Exception))
+   (lambda ()
+   (+ 1 (raise 'error))))))
 
 
 
-;; SELECT command FROM commands WHERE rowid = rowid;
-;; null?
 ;; insert command with no tags
 (define (delete-command rowid cmd)
   (call-with-current-continuation
@@ -72,11 +70,12 @@
                 (print result)
                 (execute qcommands-db delete-sql rowid))))))))))
 
-
-;; (define (store-in-db .args))
 ;; (define (search-commands))
+(define (search-commands . cmd)
+  (print "begin search"))
+
 (define select-all
-  (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands"))
+  (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
 
 (define (print-commands . cmd)
   (let ((new-cmd (append
