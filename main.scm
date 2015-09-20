@@ -71,15 +71,15 @@
                 (execute qcommands-db delete-sql rowid))))))))))
 
 ;; (define (search-commands))
+(define (print-row . row) (print row))
 (define (search-commands . cmd)
-  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;")
-        ;; (print-row (lambda (row) (print row)))
-        )
-    (define (print-row . row) (print row))
+  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
     (for-each-row print-row qcommands-db sql (string-append "%"(string-join cmd)"%")))
   (print "begin search"))
 
-(define (filter-cmd-using-tags . tags)
+(define (filter-tags . tags)
+  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
+    (for-each-row print-row qcommands-db sql (string-append "%" (string-join tags) "%")))
   (print "begin search for tags"))
 
 (define select-all
