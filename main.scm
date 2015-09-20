@@ -72,9 +72,14 @@
 
 ;; (define (search-commands))
 (define (search-commands . cmd)
+  (let ((sql "SELECT rowid, Command, Description, Tags WHERE Tags = ?"))
+    (if (> (length cmd) 1)
+       (let ((new-sql (string-append sql " AND ?" )))
+        (print new-sql)
+        )))
   (print "begin search"))
 
-(define (search-tags . tags)
+(define (filter-cmd-using-tags . tags)
   (print "begin search for tags"))
 
 (define select-all
