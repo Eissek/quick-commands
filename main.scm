@@ -74,6 +74,9 @@
 (define (search-commands . cmd)
   (print "begin search"))
 
+(define (search-tags . tags)
+  (print "begin search for tags"))
+
 (define select-all
   (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
 
