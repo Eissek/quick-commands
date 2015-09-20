@@ -72,11 +72,11 @@
 
 ;; (define (search-commands))
 (define (search-commands . cmd)
-  (let ((sql "SELECT rowid, Command, Description, Tags WHERE Tags = ?"))
-    (if (> (length cmd) 1)
-       (let ((new-sql (string-append sql " AND ?" )))
-        (print new-sql)
-        )))
+  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;")
+        ;; (print-row (lambda (row) (print row)))
+        )
+    (define (print-row . row) (print row))
+    (for-each-row print-row qcommands-db sql (string-append "%"(string-join cmd)"%")))
   (print "begin search"))
 
 (define (filter-cmd-using-tags . tags)
