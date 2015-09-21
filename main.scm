@@ -106,11 +106,14 @@
   (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
 
 
-
 (define (list-stored-commands .)
-  (for-each-row print-commands select-all)
-  ;; (finalize! qcommands-db select-all)
-  )
+  (call-with-current-continuation
+   (lambda (k)
+     (with-exception-handler
+      (lambda (x)
+        (k "Error. Could not list commands"))
+      (lambda ()
+        (for-each-row print-commands select-all))))))
 
 
 (define (add-command . args)
