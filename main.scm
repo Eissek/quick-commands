@@ -71,26 +71,29 @@
                 (execute qcommands-db delete-sql rowid))))))))))
 
 ;; (define (search-commands))
-(define (print-row . row) (print row))
-(define (search-commands . cmd)
-  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
-    (for-each-row print-row qcommands-db sql (string-append "%"(string-join cmd)"%")))
-  (print "begin search"))
-
-(define (filter-tags . tags)
-  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
-    (for-each-row print-row qcommands-db sql (string-append "%" (string-join tags) "%")))
-  (print "begin search for tags"))
-
-(define select-all
-  (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
-
 (define (print-commands . cmd)
   (let ((new-cmd (append
                   (list (number->string (car cmd)))
                   (cdr cmd))))
     ;; (print new-cmd)
     (pp (string-join new-cmd " | "))))
+
+(define (print-row . row) (string-join row))
+
+(define (search-commands . cmd)
+  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
+    (for-each-row print-commands qcommands-db sql (string-append "%"(string-join cmd)"%")))
+  (print "begin search"))
+
+(define (filter-tags . tags)
+  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
+    (for-each-row print-commands qcommands-db sql (string-append "%" (string-join tags) "%")))
+  (print "begin search for tags"))
+
+(define select-all
+  (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
+
+
 
 (define (list-stored-commands .)
   (for-each-row print-commands select-all)
