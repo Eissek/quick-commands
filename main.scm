@@ -92,9 +92,15 @@
           (print "End search")) )))))
 
 (define (filter-tags . tags)
-  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
-    (for-each-row print-commands qcommands-db sql (string-append "%" (string-join tags) "%")))
-  (print "End of search."))
+  (call-with-current-continuation
+   (lambda (k)
+     (with-exception-handler
+      (lambda (x)
+        (k "Tags search error."))
+      (lambda ()
+        (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
+          (for-each-row print-commands qcommands-db sql (string-append "%" (string-join tags) "%")))
+        (print "End of search."))))))
 
 (define select-all
   (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
