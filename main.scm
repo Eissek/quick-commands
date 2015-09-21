@@ -40,9 +40,15 @@
     ;; (finalize! qcommands-db insert-cmd)))
 
 (define (insert-cmd cmd desc . tags)
-  (let ((sql "INSERT INTO commands (Command, Description, Tags) VALUES (?,?,?)"))
-    (string-join tags " ")
-    (execute qcommands-db sql cmd desc (string-join tags " "))))
+  (call-with-current-continuation
+   (lambda (k)
+     (with-exception-handler
+      (lambda (x)
+        (k "Error: Problem with insertion."))
+      (lambda ()
+        (let ((sql "INSERT INTO commands (Command, Description, Tags) VALUES (?,?,?)"))
+          (string-join tags " ")
+          (execute qcommands-db sql cmd desc (string-join tags " "))))))))
 
 #;(call-with-current-continuation
  (lambda (k)
