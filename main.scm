@@ -146,3 +146,9 @@
                  (print "Added " command)))
            (print "its two"))
           (else (print "Wrong number of arguments.")))))
+
+(define (update-command rowid column data)
+  (cond ((equal? column "Description") (print "desc"))
+        ((equal? column "Command") (print "Command"))
+        ((equal? column "Tags") (print "Tags"))
+        (else "Error. Please check syntax.")))
