@@ -78,17 +78,23 @@
     ;; (print new-cmd)
     (pp (string-join new-cmd " | "))))
 
-(define (print-row . row) (string-join row))
+#;(define (print-row . row) (string-join row))
 
 (define (search-commands . cmd)
-  (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
-    (for-each-row print-commands qcommands-db sql (string-append "%"(string-join cmd)"%")))
-  (print "begin search"))
+  (call-with-current-continuation
+   (lambda (k)
+     (with-exception-handler
+      (lambda (x)
+        (k "Search error."))
+      (lambda ()
+        (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
+          (for-each-row print-commands qcommands-db sql (string-append "%"(string-join cmd)"%"))
+          (print "End search")) )))))
 
 (define (filter-tags . tags)
   (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
     (for-each-row print-commands qcommands-db sql (string-append "%" (string-join tags) "%")))
-  (print "begin search for tags"))
+  (print "End of search."))
 
 (define select-all
   (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
