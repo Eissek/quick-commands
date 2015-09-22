@@ -44,7 +44,8 @@
    (lambda (k)
      (with-exception-handler
       (lambda (x)
-        (k "Error: Problem with insertion."))
+        (k "Error: Problem with insertion.")
+        (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (let ((sql "INSERT INTO commands (Command, Description, Tags) VALUES (?,?,?)"))
           (string-join tags " ")
@@ -66,7 +67,8 @@
  (lambda (k)
    (with-exception-handler
     (lambda (x)
-      (k "Command not found."))
+      (k "Command not found.")
+      (print ((condition-property-accessor 'exn 'message) x)))
     (lambda ()
       (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?;")
             (delete-sql "DELETE FROM commands WHERE rowid = ?;"))
@@ -91,6 +93,7 @@
    (lambda (k)
      (with-exception-handler
       (lambda (x)
+        (print ((condition-property-accessor 'exn 'message) x))
         (k "Search error."))
       (lambda ()
         (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
@@ -102,7 +105,8 @@
    (lambda (k)
      (with-exception-handler
       (lambda (x)
-        (k "Tags search error."))
+        (k "Tags search error.")
+        (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
           (for-each-row print-commands qcommands-db sql (string-append "%" (string-join tags) "%")))
@@ -117,7 +121,8 @@
    (lambda (k)
      (with-exception-handler
       (lambda (x)
-        (k "Error. Could not list commands"))
+        (k "Error. Could not list commands")
+        (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (for-each-row print-commands select-all))))))
 
@@ -152,9 +157,8 @@
    (lambda (k)
      (with-exception-handler
       (lambda (x)
-        (print ((condition-property-accessor 'exn 'message) x))
         (k  "Error: Problem updating command.")
-        )
+        (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (let ((sql (string-append "UPDATE commands SET " column " = ?, Updated = DateTime('now') WHERE rowid = ?")))
           (cond ((equal? column "Description")
