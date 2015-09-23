@@ -8,6 +8,7 @@
 ; wish to store, such as terminal commands.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(declare (unit main))
 (require-extension sqlite3) 
 (define (hello)
   (print "Hello World"))
