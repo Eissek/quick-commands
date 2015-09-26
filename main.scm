@@ -9,7 +9,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declare (unit main))
-(require-extension sqlite3) 
+(require-extension sqlite3)
+
 (define (hello)
   (print "Hello World"))
 
@@ -17,6 +18,7 @@
   (lambda ()
     (print (current-directory))))
 
+;; Change to relative file path when compling
 (define qcommands-db
   (open-database "/media/sf_Projects/Chicken/quick-commands/resources/qcommands.db"))
 
@@ -52,13 +54,6 @@
           (string-join tags " ")
           (execute qcommands-db sql cmd desc (string-join tags " "))))))))
 
-#;(call-with-current-continuation
- (lambda (k)
-   (with-exception-handler
-   (lambda (x)
-   (k 'Exception))
-   (lambda ()
-   (+ 1 (raise 'error))))))
 
 
 
@@ -131,7 +126,9 @@
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
   ;; (qcommands-db)
-  (let ((row-count (get-row-count)))
+  (print "mine " (flatten args) " " args)
+  (let ((row-count (get-row-count))
+        (args (flatten args)))
     (cond ((>= (length args) 3)
            (print "Its more than or equal to 3")
            ;; (print args)
@@ -173,3 +170,5 @@
                  (print "Tags")
                  (execute qcommands-db sql data rowid))
                 (else "Error. Please check syntax."))))))))
+
+
