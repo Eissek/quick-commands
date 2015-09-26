@@ -112,7 +112,7 @@
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Tags LIKE ?;"))
-          (for-each-row print-commands qcommands-db sql (string-append "%" (string-join tags) "%")))
+          (for-each-row print-commands qcommands-db sql (string-append "%" (string-join (flatten tags)) "%")))
         (print "End of search."))))))
 
 (define select-all
