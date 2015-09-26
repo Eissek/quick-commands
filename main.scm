@@ -58,7 +58,7 @@
 
 
 ;; insert command with no tags
-(define (delete-command rowid cmd)
+(define (delete-command . args)
   (call-with-current-continuation
  (lambda (k)
    (with-exception-handler
@@ -66,13 +66,20 @@
       (k "Command not found.")
       (print ((condition-property-accessor 'exn 'message) x)))
     (lambda ()
-      (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?;")
-            (delete-sql "DELETE FROM commands WHERE rowid = ?;"))
-        (let ((result (first-result qcommands-db sql rowid cmd)))
-          (if (string? result)
-              (begin
-                (print result)
-                (execute qcommands-db delete-sql rowid))))))))))
+      (let ((args (flatten args)))
+        (cond ((= 2 (length args))
+               (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?;")
+                     (delete-sql "DELETE FROM commands WHERE rowid = ?;")
+                     (rowid (car args))
+                     (cmd (string-join (cdr args))))
+                 (print rowid " " cmd)
+                 (let ((result (first-result qcommands-db sql rowid cmd)))
+                   (if (string? result)
+                       (begin
+                         (print result)
+                         (execute qcommands-db delete-sql rowid))))))
+              (else (print "Incorrect number of arguments")
+                    (print args)))))))))
 
 ;; (define (search-commands))
 (define (print-commands . cmd)
