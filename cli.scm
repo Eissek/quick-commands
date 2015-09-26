@@ -14,10 +14,10 @@
 (define (test-list-commands .)
   (list-stored-commands))
 
-(define (handle-cmd-line-arguments PROC)
+(define (handle-cmd-line-arguments PROC option)
   (let ((first-arg (car (command-line-arguments)))
         (rest (cdr (command-line-arguments))))
-    (cond ((equal? arg first-arg)
+    (cond ((equal? option first-arg)
            (PROC rest))
           ((number? (string-contains first-arg "-"))
            (PROC rest)
@@ -31,7 +31,7 @@
         (args:make-option (a add)
                           (required: "COMMAND" "DESCRIPTION" "TAGS")
                           "Add Command or Data"
-                          (handle-cmd-line-arguments add-command))
+                          (handle-cmd-line-arguments add-command arg))
         (args:make-option (d delete) (required: "ID" "COMMAND")
                           "Delete Command"
                           (print "Deleting.."))
