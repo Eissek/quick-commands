@@ -28,14 +28,12 @@
            (print "args " (command-line-arguments))
            (PROC (command-line-arguments))))))
 (define (usage)
-  (with-output-to-port (current-error-port)
-    (lambda ()
-      (print "Usage: " (car (argv)) " [options...] [files...]")
+  (print "Usage: " (car (argv)) " [options...] [files...]")
       (newline)
       (print (parameterize ((args:separator " ")
                             (args:indent 5)
                             (args:width 35))
-               (args:usage opts))))))
+               (args:usage opts))))
 
 (define opts
   (list (args:make-option (c cookie) (required: "name") "Cookie for name"
