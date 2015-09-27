@@ -46,6 +46,10 @@
                           "Filter/Search for a specific tag"
                           (print "Starting filter ")
                           (handle-cmd-line-arguments filter-tags arg))
+        (args:make-option (s search) (required: "QUERY")
+                          "Search for a command/data"
+                          (print "Starting search ")
+                          (handle-cmd-line-arguments search-commands arg))
         (args:make-option (t test) (required: "TEST")
                           "testing multiple arguments"
                           (print "cml args " (command-line-arguments))
