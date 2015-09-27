@@ -157,7 +157,7 @@
            (print "its two"))
           (else (print "Wrong number of arguments.")))))
 
-(define (update-command rowid column data)
+(define (update-command . args)
   (call-with-current-continuation
    (lambda (k)
      (with-exception-handler
@@ -165,17 +165,18 @@
         (k  "Error: Problem updating command.")
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
-        (let ((sql (string-append "UPDATE commands SET " column " = ?, Updated = DateTime('now') WHERE rowid = ?")))
-          (cond ((equal? column "Description")
+        (let* ((rowid (car args))
+               (column (string-downcase (car (cdr args))))
+               (data (string-join (list-tail args 2)))
+               (sql (string-append "UPDATE commands SET " column " = ?, Updated = DateTime('now') WHERE rowid = ?")))
+          (cond ((or (equal? column "command")
+                      (equal? column "Description")
+                      (equal? column "Tags"))
                  (print "desc")
                  (print "hshs")
-                 (execute qcommands-db sql data rowid))
-                ((equal? column "Command")
-                 (print "Command")
-                 (execute qcommands-db sql data rowid))
-                ((equal? column "Tags")
-                 (print "Tags")
-                 (execute qcommands-db sql data rowid))
+                 (execute qcommands-db sql data rowid)
+                 (if (<= 0 (change-count qcommands-db))
+                     (print "Error. Could not update specified row.")))
                 (else "Error. Please check syntax."))))))))
 
 
