@@ -33,14 +33,6 @@
         #t
         #f)))
 
-;; insert command with tags
-;; (define (insert-cmd-in-db cmd desc . tags)
-  ;; (let ((insert-cmd (prepare qcommands-db "INSERT INTO commands (Command, Description, Tags) VALUES (?,?,?)")))
-    ;; (print tags)
-    ;; (string-join tags)
-    ;; (print (string-join tags " "))
-    ;; (execute insert-cmd cmd desc (string-join tags))
-    ;; (finalize! qcommands-db insert-cmd)))
 
 (define (insert-cmd cmd desc . tags)
   (call-with-current-continuation
