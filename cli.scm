@@ -27,19 +27,30 @@
           (else
            (print "args " (command-line-arguments))
            (PROC (command-line-arguments))))))
+(define (usage)
+  (with-output-to-port (current-error-port)
+    (lambda ()
+      (print "Usage: " (car (argv)) " [options...] [files...]")
+      (newline)
+      (print (parameterize ((args:separator " ")
+                            (args:indent 5)
+                            (args:width 35))
+               (args:usage opts))))))
 
 (define opts
   (list (args:make-option (c cookie) (required: "name") "Cookie for name"
                           (print "Cookie for " arg)
                           (test-list-commands))
         (args:make-option (a add)
-                          (required: "COMMAND" "DESCRIPTION" "TAGS")
+                          (required: (string-join '("COMMAND" "DESCRIPTION" "TAGS") " "))
                           "Add Command or Data"
                           (handle-cmd-line-arguments add-command arg))
-        (args:make-option (d delete) (required: "ID" "COMMAND")
+        (args:make-option (d delete) (required: (string-join '("ID" "COMMAND") " "))
                           "Delete Command"
                           (print "Deleting..")
                           (handle-cmd-line-arguments delete-command arg))
+        (args:make-option (h help) #:none "Display Help"
+                          (usage))
         (args:make-option (l list) #:none "List stored commands"
                           (list-stored-commands))
         (args:make-option (f filter) (required: "TAG")
@@ -50,7 +61,7 @@
                           "Search for a command/data"
                           (print "Starting search ")
                           (handle-cmd-line-arguments search-commands arg))
-        (args:make-option (u update) (required: "ROWID" "COLUMN" "DATE")
+        (args:make-option (u update) (required: (string-join '("ROWID" "COLUMN" "DATE") " "))
                           "Update a command"
                           (print "Starting update.")
                           (handle-cmd-line-arguments update-command arg))
