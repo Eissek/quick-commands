@@ -52,7 +52,7 @@
                           (handle-cmd-line-arguments search-commands arg))
         (args:make-option (u update) (required: "ROWID" "COLUMN" "DATE")
                           "Update a command"
-                          (print "Beginning update.")
+                          (print "Starting update.")
                           (handle-cmd-line-arguments update-command arg))
         (args:make-option (t test) (required: "TEST")
                           "testing multiple arguments"
