@@ -19,6 +19,7 @@
     (print (current-directory))))
 
 ;; Change to relative file path when compling
+
 (define qcommands-db
   (open-database "/media/sf_Projects/Chicken/quick-commands/resources/qcommands.db"))
 
