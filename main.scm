@@ -78,9 +78,13 @@
 (define (print-commands . cmd)
   (let ((new-cmd (append
                   (list (number->string (car cmd)))
-                  (cdr cmd))))
+                  (cdr cmd)
+                  )))
     ;; (print new-cmd)
-    (pp (string-join new-cmd " | "))))
+    ;;(pp (string-join new-cmd " | "))
+    ;; (string-join new-cmd " | ")
+    new-cmd
+    ))
 
 #;(define (print-row . row) (string-join row))
 
@@ -120,7 +124,9 @@
         (k "Error. Could not list commands")
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
-        (for-each-row print-commands select-all))))))
+        (let ((commands (map-row print-commands select-all)))
+          commands)
+        )))))
 
 
 (define (add-command . args)
