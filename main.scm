@@ -123,7 +123,7 @@
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (let ((command (map-row print-commands select-all)))
-         command ))))))
+         command))))))
 
 
 (define (add-command . args)
