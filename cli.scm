@@ -15,6 +15,9 @@
   (list-stored-commands))
 
 (define (handle-cmd-line-arguments PROC option)
+  ;; parses the cmdline args by getting the data
+  ;; -after the initial option
+  ;; e.g. everything after -h
   (let ((first-arg (car (command-line-arguments)))
         (rest (cdr (command-line-arguments))))
     (cond ((equal? option first-arg)
@@ -58,7 +61,7 @@
         (args:make-option (s search) (required: "QUERY")
                           "Search for a command/data"
                           (print "Starting search ")
-                          (handle-cmd-line-arguments search-commands arg))
+                          (display (handle-cmd-line-arguments search-commands arg)))
         (args:make-option (u update) (required: (string-join '("ROWID" "COLUMN" "DATE") " "))
                           "Update a command"
                           (print "Starting update.")

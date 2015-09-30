@@ -95,8 +95,8 @@
         (k "Search error."))
       (lambda ()
         (let ((sql "SELECT rowid, Command, Description, Tags FROM commands WHERE Command LIKE ?;"))
-          (for-each-row print-commands qcommands-db sql (string-append "%"(string-join (flatten cmd))"%"))
-          (print "End search")) )))))
+          (map-row print-commands qcommands-db sql (string-append "%"(string-join (flatten cmd))"%"))
+          ))))))
 
 (define (filter-tags . tags)
   (call-with-current-continuation
