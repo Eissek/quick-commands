@@ -53,11 +53,11 @@
         (args:make-option (h help) #:none "Display Help"
                           (usage))
         (args:make-option (l list) #:none "List stored commands"
-                          (display (string-join (list-stored-commands))))
+                          (display (string-join (append (list-stored-commands) '("\n")))))
         (args:make-option (f filter) (required: "TAG")
                           "Filter/Search for a specific tag"
                           (print "Starting filter ")
-                          (handle-cmd-line-arguments filter-tags arg))
+                          (display (string-join (handle-cmd-line-arguments filter-tags arg))))
         (args:make-option (s search) (required: "QUERY")
                           "Search for a command/data"
                           (print "Starting search ")

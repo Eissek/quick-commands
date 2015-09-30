@@ -77,9 +77,10 @@
 ;; (define (search-commands))
 (define (print-commands . cmd)
   (let ((new-cmd (append
+                  '("\n")
                   (list (number->string (car cmd)))
                   (cdr cmd)
-                  '("\n"))))
+                  )))
     (string-join new-cmd " | ")
     ;; new-cmd
     ))
