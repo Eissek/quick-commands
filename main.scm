@@ -81,9 +81,12 @@
                   (cdr cmd)
                   )))
     ;; (print new-cmd)
-    ;;(pp (string-join new-cmd " | "))
-    ;; (string-join new-cmd " | ")
-    new-cmd
+    ;; (pp (string-join new-cmd " | "))
+    (string-join new-cmd " | ")
+    ;; new-cmd
+    ;; (write (string-join new-cmd " | "))
+    ;; (newline)
+    
     ))
 
 #;(define (print-row . row) (string-join row))
@@ -124,9 +127,8 @@
         (k "Error. Could not list commands")
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
-        (let ((commands (map-row print-commands select-all)))
-          commands)
-        )))))
+        (let ((command (map-row print-commands select-all)))
+         command ))))))
 
 
 (define (add-command . args)
