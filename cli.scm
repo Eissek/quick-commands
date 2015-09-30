@@ -14,6 +14,9 @@
 (define (test-list-commands .)
   (list-stored-commands))
 
+(define (print-n-format arg)
+  (display (string-join (append arg '("\n")))))
+
 (define (handle-cmd-line-arguments PROC option)
   ;; parses the cmdline args by getting the data
   ;; -after the initial option
@@ -57,11 +60,11 @@
         (args:make-option (f filter) (required: "TAG")
                           "Filter/Search for a specific tag"
                           (print "Starting filter ")
-                          (display (string-join (handle-cmd-line-arguments filter-tags arg))))
+                          (display (string-join (append (handle-cmd-line-arguments filter-tags arg) '("\n")))))
         (args:make-option (s search) (required: "QUERY")
                           "Search for a command/data"
                           (print "Starting search ")
-                          (display (handle-cmd-line-arguments search-commands arg)))
+                          (print-n-format (handle-cmd-line-arguments search-commands arg)))
         (args:make-option (u update) (required: (string-join '("ROWID" "COLUMN" "DATE") " "))
                           "Update a command"
                           (print "Starting update.")
