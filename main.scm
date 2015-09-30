@@ -80,14 +80,8 @@
                   (list (number->string (car cmd)))
                   (cdr cmd)
                   '("\n"))))
-    ;; (print new-cmd)
-    ;; (pp (string-join new-cmd " | "))
     (string-join new-cmd " | ")
     ;; new-cmd
-    ;; (append new-cmd '("\n"))
-    ;; (write (string-join new-cmd " | "))
-    ;; (newline)
-    
     ))
 
 #;(define (print-row . row) (string-join row))
