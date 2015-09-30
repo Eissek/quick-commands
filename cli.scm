@@ -50,7 +50,7 @@
         (args:make-option (h help) #:none "Display Help"
                           (usage))
         (args:make-option (l list) #:none "List stored commands"
-                          (pp (list-stored-commands)))
+                          (display (string-join (list-stored-commands))))
         (args:make-option (f filter) (required: "TAG")
                           "Filter/Search for a specific tag"
                           (print "Starting filter ")
