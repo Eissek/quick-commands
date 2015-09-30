@@ -7,8 +7,7 @@
 ;; location
 
 (hello)
-(define db
-  (open-database "/media/sf_Projects/Chicken/quick-commands/tests/qcommands-test.db"))
+
 (test-group "Test list-stored-commands and insert-command"
             
             (test-assert "Should be true"
@@ -17,6 +16,10 @@
             (let ((rows (get-row-count)))
               (print "Row Count: " (get-row-count))
               (insert-cmd "test-command2" "test" "testing")
+
+              (test-assert "commands list should be >= 1"
+                          (>= (length (list-stored-commands)) 1))
+              
               (test-assert "Data Insertion - change count should be 1 or more"
                            (>= (change-count qcommands-db) 0))
               (test "Row count after insertion should increase by one"
@@ -50,8 +53,29 @@
                            (= (change-count qcommands-db) 1)))
 
 (test-group "Search Commands"
-            (test-assert "Search for command" (search-commands ) ))
-(test-group "Filter Tags")
+            (let ((cmd-count (length(list-stored-commands))))
+              (insert-cmd "c-xxxxx" "test" "testing")
+              (test-assert "Test whether the cmd count has increased by 1"
+                           (= (length (list-stored-commands)) (+ cmd-count 1)))
+
+              (test-assert "Search should return a list of 1 or more"
+                    (>= (length (search-commands "c-xxxxx")) 1))
+              
+              (delete-command (last-insert-rowid qcommands-db)
+                              "c-xxxxx")
+              (test-assert "commands list should be down one after deletion"
+                           (= cmd-count (length (list-stored-commands))))))
+(test-group "Filter Tags"
+            (let ((count (length (list-stored-commands))))
+              (insert-cmd "c-xxxxx" "no desc" "testing-tag")
+              (test-assert "Test command count increase"
+                           (= (length (list-stored-commands)) (+ count 1)))
+              (test-assert "Filter tags should return at least 1 result"
+                           (>= (length (filter-tags "testing-tag")) 1))
+              (delete-command (last-insert-rowid qcommands-db)
+                              "c-xxxxx")
+              (test-assert "list of commands should down one after delete"
+                           (= (length (list-stored-commands)) count))))
 (test-group "CLI Tests")
 
 ;; (test-exit)
