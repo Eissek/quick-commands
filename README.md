@@ -51,5 +51,14 @@ For more details on the Linux availability check [here](http://wiki.call-cc.org/
 
 For any other information on the compiler please visit the CHICKEN [website] (http://code.call-cc.org/)  
 
+#### Compilation
+Run the following commands to compile:   
+`$ csc -c main.scm && csc -c cli.scm`  
+`$ csc main.o cli.o -o qc`  
+
+The quick-commands executable should now be available under the filename "qc".  
+
+
+
 
 
