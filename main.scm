@@ -173,7 +173,6 @@
                      (equal? column "Description")
                      (equal? column "Tags"))
                  (print "desc")
-                 (print "hshs")
                  (execute qcommands-db sql data rowid)
                  (if (< 1 (change-count qcommands-db))
                      (print "Error. Could not update specified row.")
