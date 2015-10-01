@@ -1,4 +1,3 @@
-;; (use test)
 (require-extension test)
 (require-extension sqlite3)
 (load-relative "../main.scm") ;; change to relative path for compilation
