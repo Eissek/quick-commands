@@ -42,10 +42,7 @@
                (args:usage opts))))
 
 (define opts
-  (list (args:make-option (c cookie) (required: "name") "Cookie for name"
-                          (print "Cookie for " arg)
-                          (test-list-commands))
-        (args:make-option (a add)
+  (list (args:make-option (a add)
                           (required: (string-join '("COMMAND" "DESCRIPTION" "TAGS") " "))
                           "Add Command or Data"
                           (handle-cmd-line-arguments add-command arg))
@@ -68,11 +65,6 @@
         (args:make-option (u update) (required: (string-join '("ROWID" "COLUMN" "DATE") " "))
                           "Update a command"
                           (print "Starting update.")
-                          (handle-cmd-line-arguments update-command arg))
-        (args:make-option (t test) (required: "TEST")
-                          "testing multiple arguments"
-                          (print "cml args " (command-line-arguments))
-                          (print "cdr " (string-join (cdr(command-line-arguments))))
-                          (print "arg " arg))))
+                          (handle-cmd-line-arguments update-command arg))))
 
 (args:parse (command-line-arguments) opts)
