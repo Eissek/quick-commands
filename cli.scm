@@ -45,18 +45,23 @@
                           (required: (string-join '("COMMAND" "DESCRIPTION" "TAGS") " "))
                           "Add Command or Data"
                           (handle-cmd-line-arguments add-command arg))
+        
         (args:make-option (d delete) (required: (string-join '("ID" "COMMAND") " "))
                           "Delete Command"
                           (print "Deleting..")
                           (handle-cmd-line-arguments delete-command arg))
-        (args:make-option (h help) #:none "Display Help"
-                          (usage))
-        (args:make-option (l list) #:none "List stored commands"
-                          (print-n-format (list-stored-commands)))
+        
         (args:make-option (f filter) (required: "TAG")
                           "Filter/Search for a specific tag"
                           (print "Starting filter ")
                           (print-n-format (handle-cmd-line-arguments filter-tags arg)))
+        
+        (args:make-option (h help) #:none "Display Help"
+                          (usage))
+        
+        (args:make-option (l list) #:none "List stored commands"
+                          (print-n-format (list-stored-commands)))
+        
         (args:make-option (s search) (required: "QUERY")
                           "Search for a command/data"
                           (print "Starting search ")
