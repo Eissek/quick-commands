@@ -37,7 +37,7 @@ Delete:
 `$ ./qc -d 1 "C-x b"`  
 
 Update:  
-`$ ./qc -u 1 "Description" "Switch Buffer"  
+`$ ./qc -u 1 "Description" "Switch Buffer"`    
 
 
 
