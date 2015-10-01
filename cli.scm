@@ -12,8 +12,6 @@
 (require-extension args)
 (declare (uses main))
 
-(define (test-list-commands .)
-  (list-stored-commands))
 
 (define (print-n-format arg)
   (display (string-join (append arg '("\n")))))
