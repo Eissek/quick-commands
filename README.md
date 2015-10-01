@@ -46,7 +46,7 @@ Update:
 To compile and build quick-commands from scratch you will need to use the CHICKEN Scheme to C Compiler.   
 #### Linux users
 CHICKEN should be available in most package management systems, although it's not always the latest version.   
-It already comes as part of Debian and Unbuntu.   
+It already comes as part of Debian and Ubuntu.   
 For more details on the Linux availability check [here](http://wiki.call-cc.org/platforms#linux)  
 
 For any other information on the compiler please visit the CHICKEN [website] (http://code.call-cc.org/)  
