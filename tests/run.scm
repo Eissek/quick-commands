@@ -2,11 +2,7 @@
 (require-extension test)
 (require-extension sqlite3)
 (load-relative "../main.scm") ;; change to relative path for compilation
-;; to test db, make main.scm have the option of taking
-;; a db file, if it is not suggested then use the default
-;; location
 
-(hello)
 
 (test-group "Test list-stored-commands and insert-command"
             
