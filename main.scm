@@ -65,11 +65,11 @@
                      (delete-sql "DELETE FROM commands WHERE rowid = ?;")
                      (rowid (car args))
                      (cmd (string-join (cdr args))))
-                 (print rowid " " cmd)
+                 ;; (print rowid " " cmd)
                  (let ((result (first-result qcommands-db sql rowid cmd)))
                    (if (string? result)
                        (begin
-                         (print result)
+                         ;; (print result)
                          (execute qcommands-db delete-sql rowid))))))
               (else (print "Incorrect number of arguments")
                     (print args)))))))))
