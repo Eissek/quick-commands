@@ -5,6 +5,7 @@ I developed this small app just because I always struggled to remember certain k
 
 ## Download
 ### Linux
+####x86-64
 Get latest version [here](https://github.com/Eissek/quick-commands/releases)  
 
 ### Windows
