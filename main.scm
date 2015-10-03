@@ -128,12 +128,9 @@
 
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
-  ;; (qcommands-db)
-  (print "mine " (flatten args) " " args)
   (let ((row-count (get-row-count))
         (args (flatten args)))
     (cond ((>= (length args) 3)
-           (print "Its more than or equal to 3")
            ;; (print args)
            (let ((command (car args))
                  (desc (car (cdr args)))
