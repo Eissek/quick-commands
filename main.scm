@@ -21,8 +21,7 @@
 
 ;; Change to relative file path when compling
 (define qcommands-db
-  ;; (open-database "resources/qcommands.db")
-  (open-database "/media/sf_Projects/Chicken/quick-commands/test-db/qcommands.db"))
+  (open-database "resources/qcommands.db"))
 
 
 (define (get-row-count .)
@@ -64,14 +63,14 @@
         (cond ((= 1 (length args))
                (let ((sql "SELECT command FROM commands WHERE rowid = ?;")
                      (delete-sql "DELETE FROM commands WHERE rowid = ?;")
-                     (rowid (car args))
-                     (cmd (string-join (cdr args))))
+                     (rowid (car args)))
                  ;; (print rowid " " cmd)
-                 (let ((result (first-result qcommands-db sql rowid cmd)))
+                 (let ((result (first-result qcommands-db sql rowid)))
                    (if (string? result)
                        (begin
                          ;; (print result)
-                         (execute qcommands-db delete-sql rowid))))))
+                         (execute qcommands-db delete-sql rowid)
+                         (print "Deleted " result))))))
               (else (print "Incorrect number of arguments")
                     (print args)))))))))
 
@@ -124,7 +123,7 @@
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
         (let ((command (map-row print-commands select-all)))
-         command))))))
+          command))))))
 
 
 (define (add-command . args)

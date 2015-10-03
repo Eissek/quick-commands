@@ -32,6 +32,7 @@
           (else
            ;;(print "args " (command-line-arguments))
            (PROC (command-line-arguments))))))
+
 (define (usage)
   (print "Usage: " (car (argv)) " [options...] [files...]")
       (newline)
