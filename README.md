@@ -36,7 +36,7 @@ Add new command
 `$ ./qc -a "C-x b" "Changes Buffer" "Emacs"`   
 
 Delete:   
-`$ ./qc -d 1 "C-x b"`  
+`$ ./qc -d 1`  
 
 Update:  
 `$ ./qc -u 1 "Description" "Switch Buffer"`    

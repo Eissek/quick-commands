@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; qucik-commands v. 0.92
+;; qucik-commands v. 0.93
 ;; cli.scm
 ;; Created by Eissek
 ;; 21 September 2015
