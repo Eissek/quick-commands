@@ -23,14 +23,14 @@
   (let ((first-arg (car (command-line-arguments)))
         (rest (cdr (command-line-arguments))))
     (cond ((equal? option first-arg)
-           (print "first ")
+           ;;(print "first ")
            (PROC rest))
           ((number? (string-contains first-arg "-"))
-           (print "FOUND - DASH")
-           (print (command-line-arguments))
+           ;;(print "FOUND - DASH")
+           ;;(print (command-line-arguments))
            (PROC rest))
           (else
-           (print "args " (command-line-arguments))
+           ;;(print "args " (command-line-arguments))
            (PROC (command-line-arguments))))))
 (define (usage)
   (print "Usage: " (car (argv)) " [options...] [files...]")
@@ -48,7 +48,7 @@
         
         (args:make-option (d delete) (required: (string-join '("ID" "COMMAND") " "))
                           "Delete Command"
-                          (print "Deleting..")
+                          (print "Deleting.")
                           (handle-cmd-line-arguments delete-command arg))
         
         (args:make-option (f filter) (required: "TAG")
