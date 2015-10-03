@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; qucik-commands v. 0.9
+;; qucik-commands v. 0.92
 ;; cli.scm
 ;; Created by Eissek
 ;; 21 September 2015
@@ -47,7 +47,7 @@
                           "Add Command or Data"
                           (handle-cmd-line-arguments add-command arg))
         
-        (args:make-option (d delete) (required: (string-join '("ID" "COMMAND") " "))
+        (args:make-option (d delete) (required: "ROW ID")
                           "Delete Command"
                           (print "Deleting.")
                           (handle-cmd-line-arguments delete-command arg))

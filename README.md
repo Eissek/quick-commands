@@ -17,7 +17,7 @@ Run the binary/executable named qc with one of the following options:
 ```
 -a [COMMAND] [DESCRIPTION] [TAGS] 	- Add a new command/data, tags are optional  
 
--d [ID] [COMMAND] - Deletes specified command. ID and command are both required.  
+-d [ID] - Deletes specified command using its ROW ID.  
 
 -f [TAG] - Filters commands list based on speicifed TAG  
 
