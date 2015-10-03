@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; quick-commands v. 0.91
+; quick-commands v. 0.92
 ; main.scm
 ; Created by Eissek
 ; 13 September 2015
@@ -21,7 +21,8 @@
 
 ;; Change to relative file path when compling
 (define qcommands-db
-  (open-database "resources/qcommands.db"))
+  ;; (open-database "resources/qcommands.db")
+  (open-database "/media/sf_Projects/Chicken/quick-commands/test-db/qcommands.db"))
 
 
 (define (get-row-count .)
@@ -60,8 +61,8 @@
       (print ((condition-property-accessor 'exn 'message) x)))
     (lambda ()
       (let ((args (flatten args)))
-        (cond ((= 2 (length args))
-               (let ((sql "SELECT command FROM commands WHERE rowid = ? AND command = ?;")
+        (cond ((= 1 (length args))
+               (let ((sql "SELECT command FROM commands WHERE rowid = ?;")
                      (delete-sql "DELETE FROM commands WHERE rowid = ?;")
                      (rowid (car args))
                      (cmd (string-join (cdr args))))
