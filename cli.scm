@@ -49,7 +49,7 @@
         
         (args:make-option (d delete) (required: "ROW ID")
                           "Delete Command"
-                          (print "Deleting.")
+                          ;; (print "Deleting.")
                           (handle-cmd-line-arguments delete-command arg))
         
         (args:make-option (f filter) (required: "TAG")
