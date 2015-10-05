@@ -69,7 +69,7 @@
                           (print-n-format (handle-cmd-line-arguments search-commands arg)))
         (args:make-option (u update) (required: (string-join '("ROWID" "COLUMN" "DATE") " "))
                           "Update a command"
-                          (print "Starting update.")
+                          ;; (print "Starting update.")
                           (handle-cmd-line-arguments update-command arg))))
 
 (args:parse (command-line-arguments) opts)
