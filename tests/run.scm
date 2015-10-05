@@ -21,8 +21,7 @@
                     (+ rows 1)
                     (get-row-count))
               
-              (delete-command (last-insert-rowid qcommands-db)
-                              "test-command2")
+              (delete-command (last-insert-rowid qcommands-db))
               (test "Row count should be one less after deletetion"
                     rows ;; row count before delete
                     (get-row-count))
@@ -56,8 +55,7 @@
               (test-assert "Search should return a list of 1 or more"
                     (>= (length (search-commands "c-xxxxx")) 1))
               
-              (delete-command (last-insert-rowid qcommands-db)
-                              "c-xxxxx")
+              (delete-command (last-insert-rowid qcommands-db))
               (test-assert "commands list should be down one after deletion"
                            (= cmd-count (length (list-stored-commands))))))
 (test-group "Filter Tags"
@@ -67,8 +65,7 @@
                            (= (length (list-stored-commands)) (+ count 1)))
               (test-assert "Filter tags should return at least 1 result"
                            (>= (length (filter-tags "testing-tag")) 1))
-              (delete-command (last-insert-rowid qcommands-db)
-                              "c-xxxxx")
+              (delete-command (last-insert-rowid qcommands-db))
               (test-assert "list of commands should down one after delete"
                            (= (length (list-stored-commands)) count))))
 (test-group "CLI Tests")

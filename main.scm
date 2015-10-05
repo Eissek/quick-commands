@@ -21,7 +21,7 @@
 
 ;; Change to relative file path when compling
 (define qcommands-db
-  (open-database "resources/qcommands.db"))
+  (open-database "/media/sf_Projects/Chicken/quick-commands/test-db/qcommands.db"))
 
 
 (define (get-row-count .)
