@@ -9,8 +9,9 @@
 ; wish to store, such as terminal commands.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare (unit main))
+
 (require-extension sqlite3)
+(declare (unit main))
 
 (define (hello)
   (print "Hello World"))
@@ -81,9 +82,7 @@
                   (list (number->string (car cmd)))
                   (cdr cmd)
                   )))
-    (string-join new-cmd " | ")
-    ;; new-cmd
-    ))
+    (string-join new-cmd " | ")))
 
 #;(define (print-row . row) (string-join row))
 

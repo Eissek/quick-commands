@@ -9,6 +9,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Dependent on main.scm
+(require-extension sqlite3)
 (require-extension args)
 (declare (uses main))
 
