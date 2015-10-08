@@ -11,13 +11,12 @@
 
 (declare (unit main))
 (require-extension sqlite3)
-(require-extension posix)
+;; (require-extension posix)
 
-(define (hello)
-  (print "Hello World"))
 
-(define (src-path)
-  (get-environment-variable "PWD"))
+
+(define src-path
+ (string-append (get-environment-variable "PWD") "/qc/resources/qcommands.db"))
 
 (define this-path
   (lambda ()
@@ -25,9 +24,7 @@
 
 ;; Change to relative file path when compling
 (define qcommands-db
-  ;; (open-database (string-append (current-directory) "/qc/resources/qcommands.db"))
-  (open-database "/media/sf_Projects/Chicken/quick-commands/release/qc/resources/qcommands.db")
-  )
+  (open-database src-path))
 
 
 (define (get-row-count .)
