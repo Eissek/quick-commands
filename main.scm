@@ -9,12 +9,15 @@
 ; wish to store, such as terminal commands.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-(require-extension sqlite3)
 (declare (unit main))
+(require-extension sqlite3)
+(require-extension posix)
 
 (define (hello)
   (print "Hello World"))
+
+(define (src-path)
+  (get-environment-variable "PWD"))
 
 (define this-path
   (lambda ()
@@ -22,7 +25,9 @@
 
 ;; Change to relative file path when compling
 (define qcommands-db
-  (open-database "resources/qcommands.db"))
+  ;; (open-database (string-append (current-directory) "/qc/resources/qcommands.db"))
+  (open-database "/media/sf_Projects/Chicken/quick-commands/release/qc/resources/qcommands.db")
+  )
 
 
 (define (get-row-count .)
