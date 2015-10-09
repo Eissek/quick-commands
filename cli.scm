@@ -1,9 +1,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; qucik-commands v. 0.93
+;; qucik-commands v. 0.94
 ;; cli.scm
 ;; Created by Eissek
 ;; 21 September 2015
-;;
+;; Copyright 2015
 ;; Provides a Command Line Interface for the
 ;; quickCommands application
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11,8 +11,6 @@
 ;; Dependent on main.scm
 (declare (uses main))
 (require-extension args)
-
-
 
 (define (print-n-format arg)
   (display (string-join (append arg '("\n")))))

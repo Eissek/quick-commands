@@ -1,9 +1,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; quick-commands v. 0.92
+; quick-commands v. 0.94
 ; main.scm
 ; Created by Eissek
 ; 13 September 2015
-;
+; Copyright 2015
 ; A small program that allows users to
 ; save commands or any other information, they
 ; wish to store, such as terminal commands.
@@ -23,7 +23,6 @@
 
 (define qcommands-db
   (open-database db-path))
-
 
 (define (get-row-count .)
   (first-result qcommands-db "SELECT COUNT (Command) FROM commands"))
