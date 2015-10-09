@@ -11,6 +11,14 @@ Get latest version [here](https://github.com/Eissek/quick-commands/releases)
 ### Windows
 tbc
 
+## Installation    
+Enter the following command in the new release directory   
+`$ make install`   
+
+The qc executable should now have been copied to `~/bin/qc` directory.   
+
+
+
 ## Usage?
 Its a command line tool so open up your terminal/command-line and cd to where you have extracted the compressed file.   
 Run the binary/executable named qc with one of the following options:   
