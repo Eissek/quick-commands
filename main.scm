@@ -10,21 +10,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declare (unit main))
-(require-extension sqlite3)
-;; (require-extension posix)
+(require-extension sqlite3 posix srfi-13)
 
+;; (print "hello")
 
+(define db-path (string-append
+                 (get-environment-variable "HOME") "/qcommands.db"))
 
-(define src-path
- (string-append (get-environment-variable "PWD") "/qc/resources/qcommands.db"))
+;; maybe create database from schema if not found
+(if (not (file-exists? db-path))
+    (print "Could not locate qcommands.db in " (get-environment-variable "HOME")))
 
-(define this-path
-  (lambda ()
-    (print (current-directory))))
-
-;; Change to relative file path when compling
 (define qcommands-db
-  (open-database src-path))
+  (open-database db-path))
 
 
 (define (get-row-count .)
