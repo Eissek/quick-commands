@@ -15,7 +15,7 @@ tbc
 Enter the following command in the new release directory   
 `$ make install`   
 
-The qc executable should now have been copied to `~/bin/qc` directory.   
+The qc executable should now have been copied to `~/bin/qc` directory, ready for usage.   
 
 
 
