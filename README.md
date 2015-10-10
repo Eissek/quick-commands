@@ -12,7 +12,7 @@ Get latest version [here](https://github.com/Eissek/quick-commands/releases)
 tbc
 
 ## Installation    
-Enter the following command in the new release directory   
+Enter the following command in the qc_release directory   
 `$ make install`   
 
 The qc executable should now have been copied to `~/bin/qc` directory, ready for usage.   
