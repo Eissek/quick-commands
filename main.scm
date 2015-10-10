@@ -4,13 +4,18 @@
 ; Created by Eissek
 ; 13 September 2015
 ; Copyright 2015
+;
 ; A small program that allows users to
 ; save commands or any other information, they
 ; wish to store, such as terminal commands.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declare (unit main))
-(require-extension sqlite3 posix srfi-13)
+(require-extension posix)
+(require-extension sqlite3)
+(require-extension srfi-13)
+
+
 
 ;; (print "hello")
 
