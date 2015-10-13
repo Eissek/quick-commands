@@ -71,7 +71,7 @@ compile_win: $(CCBIN)/csc.exe cli.scm main.scm resources/qcommands.db
 	chicken-install -deploy -p qc sqlite3 posix args srfi-13
 	$(MAKE) install
 	
-compile_linux: cli.scm main.scm qc/resources/qcommands.db
+compile_linux: cli.scm main.scm resources/qcommands.db
 	csc -c cli.scm main.scm
 	csc -deploy cli.o main.o -o qc
 	cp -r resources qc
