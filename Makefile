@@ -71,7 +71,7 @@ compile_linux: cli.scm main.scm resources/qcommands.db
 	chicken-install -deploy -p $(PWD)/qc sqlite3 posix args srfi-13
 	$(MAKE) install
 	
-install: resources/qcommands.db qc LICENCE README.md
+install: resources/qcommands.db qc LICENSE README.md
 	cp qc/resources/qcommands.db $(HOME)
 	cp -vr qc $(HOME)/bin
 	@echo "Installation complete."
