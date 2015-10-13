@@ -3,6 +3,13 @@ CC=chicken-4.10.0
 OSTYPE=$(shell uname)
 CCBIN=/c/Chicken/bin
 
+ifeq (, $(SUDO_USER))
+    USERHOME=$(HOME)
+else
+    USERHOME=/home/$(SUDO_USER)
+endif
+
+
 all: download extract os
 
 download:
@@ -57,7 +64,7 @@ endif
 	cd $(CCBIN)/ && chicken-install sqlite3 posix args srfi-13
 	$(MAKE) compile_win
 	
-compile_win: $(CCBIN)/csc.exe cli.scm main.scm qc/resources/qcommands.db
+compile_win: $(CCBIN)/csc.exe cli.scm main.scm resources/qcommands.db
 	csc -c cli.scm main.scm
 	csc -deploy cli.o main.o -o qc
 	cp -r resources qc
@@ -73,7 +80,7 @@ compile_linux: cli.scm main.scm qc/resources/qcommands.db
 	
 install: resources/qcommands.db qc LICENSE README.md
 	cp qc/resources/qcommands.db $(HOME)
-	cp -vr qc $(HOME)/bin
+	cp -vr qc $(USERHOME)/bin
 	@echo "Installation complete."
 
 	
