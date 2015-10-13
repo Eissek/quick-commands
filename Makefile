@@ -79,8 +79,8 @@ compile_linux: cli.scm main.scm resources/qcommands.db
 	$(MAKE) install
 	
 install: resources/qcommands.db qc LICENSE README.md
-	cp qc/resources/qcommands.db $(HOME)
-	cp -vr qc $(USERHOME)/bin
+	cp qc/resources/qcommands.db $(USERHOME)
+	cp -vr qc $(USERHOME)/bin/quick-commands
 	@echo "Installation complete."
 
 	
