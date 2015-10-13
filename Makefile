@@ -1,6 +1,6 @@
 .PHONY: all download extract os install windows linux sqlite3 eggs eggs_windows eggs_linux compile_win compile_linux
 CC=chicken-4.10.0
-OSTYPE=$(shell UNAME)
+OSTYPE=$(shell uname)
 CCBIN=/c/Chicken/bin
 
 all: download extract os
