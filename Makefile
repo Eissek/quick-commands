@@ -80,7 +80,7 @@ compile_linux: cli.scm main.scm resources/qcommands.db
 	
 install: resources/qcommands.db qc LICENSE README.md
 	cp qc/resources/qcommands.db $(USERHOME)/
-	cp -vr qc/ $(USERHOME)/bin/
+	cp -vr qc $(USERHOME)/bin/
 	@echo "Installation complete."
 
 	
