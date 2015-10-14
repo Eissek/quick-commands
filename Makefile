@@ -74,14 +74,14 @@ compile_win: $(CCBIN)/csc.exe cli.scm main.scm resources/qcommands.db
 	$(DEPLOY)
 	$(COPY_RES)
 	$(INSTALL_EGGS)
-	sudo $(MAKE) install
+	$(MAKE) install
 	
 compile_linux: cli.scm main.scm resources/qcommands.db
 	$(COMPILE_SCM)
 	$(DEPLOY)
 	$(COPY_RES)
 	$(INSTALL_EGGS)
-	sudo $(MAKE) install
+	$(MAKE) install
 	
 install: resources/qcommands.db qc LICENSE README.md
 	cp README.md qc/
