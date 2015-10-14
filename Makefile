@@ -2,6 +2,11 @@
 CC=chicken-4.10.0
 OSTYPE=$(shell uname)
 CCBIN=/c/Chicken/bin
+COMPILE_SCM=csc -c cli.scm main.scm
+DEPLOY=csc -deploy cli.o main.o -o qc/
+COPY_RES=cp -r resources/ qc/
+INSTALL_EGGS=chicken-install -deploy -p qc sqlite3 posix args srfi-13
+
 
 ifeq (, $(SUDO_USER))
     USERHOME=$(HOME)
@@ -65,26 +70,23 @@ endif
 	$(MAKE) compile_win
 	
 compile_win: $(CCBIN)/csc.exe cli.scm main.scm resources/qcommands.db
-	csc -c cli.scm main.scm
-	csc -deploy cli.o main.o -o qc
-	cp -r resources/ qc/
-	chicken-install -deploy -p qc sqlite3 posix args srfi-13
-	$(MAKE) install
+	$(COMPILE_SCM)
+        $(DEPLOY)
+        $(COPY_RES)
+        $(INSTALL_EGGS)
+	sudo $(MAKE) install
 	
 compile_linux: cli.scm main.scm resources/qcommands.db
-	csc -c cli.scm main.scm
-	csc -deploy cli.o main.o -o qc
-	cp -r resources/ qc/
-	chicken-install -deploy -p qc sqlite3 posix args srfi-13
-	$(MAKE) install
+	$(COMPILE_SCM)
+	$(DEPLOY)
+	$(COPY_RES)
+	$(INSTALL_EGGS)
+	sudo $(MAKE) install
 	
 install: resources/qcommands.db qc LICENSE README.md
+	cp README.md qc/
 	cp qc/resources/qcommands.db $(USERHOME)/
 	cp -vr qc/ $(USERHOME)/bin/
 	@echo "Installation complete."
 
-	
-
-	
-	
 
