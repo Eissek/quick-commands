@@ -3,7 +3,7 @@ CC=chicken-4.10.0
 OSTYPE=$(shell uname)
 CCBIN=/c/Chicken/bin
 COMPILE_SCM=csc -c cli.scm main.scm
-DEPLOY=csc -deploy cli.o main.o -o qc/
+DEPLOY=csc -deploy cli.o main.o -o qc
 COPY_RES=cp -r resources/ qc/
 INSTALL_EGGS=chicken-install -deploy -p qc sqlite3 posix args srfi-13
 
