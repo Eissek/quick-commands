@@ -89,7 +89,7 @@ install: resources/qcommands.db qc LICENSE README.md
 #cp qc/resources/qcommands.db $(USERHOME)/
 #mkdir -p $(USERHOME)/bin/quick_commands/
 	cp -avr qc/ $(USERHOME)/bin/
-	cp -a resources/qcommands.db $(USERHOME)
+	cp -a resources/qcommands.db $(USERHOME)/
 	@echo "Installation complete."
 
 
