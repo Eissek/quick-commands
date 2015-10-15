@@ -72,22 +72,24 @@ endif
 compile_win: $(CCBIN)/csc.exe cli.scm main.scm resources/qcommands.db
 	$(COMPILE_SCM)
 	$(DEPLOY)
-	$(COPY_RES)
+#$(COPY_RES)
 	$(INSTALL_EGGS)
 	$(MAKE) install
 	
 compile_linux: cli.scm main.scm resources/qcommands.db
 	$(COMPILE_SCM)
 	$(DEPLOY)
-	$(COPY_RES)
+#$(COPY_RES)
 	$(INSTALL_EGGS)
 	$(MAKE) install
 	
 install: resources/qcommands.db qc LICENSE README.md
-	cp README.md qc/
-	cp qc/resources/qcommands.db $(USERHOME)/
-	mkdir -p $(USERHOME)/bin/quick_commands/
-	cp -avr qc/ $(USERHOME)/bin/quick_commands/
+	cp README.md LICENSE qc/
+	mkdir -p $(USERHOME)/bin/
+#cp qc/resources/qcommands.db $(USERHOME)/
+#mkdir -p $(USERHOME)/bin/quick_commands/
+	cp -avr qc/ $(USERHOME)/bin/
+	cp -a resources/qcommands.db $(USERHOME)
 	@echo "Installation complete."
 
 
