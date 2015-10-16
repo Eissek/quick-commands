@@ -66,18 +66,32 @@ This should
 * install quick-commands in $HOME/bin/qc directory  
 
 Now run the qc executable from the $HOME/bin/qc directory.
-`cd ~/bin/qc/`
+`cd ~/bin/qc/` to cd to the qc folder.  
+Use the following to add a command, replace the placeholders your own data:  
+'./qc -a "COMMAND HERE" "DESCRIPTION HERE" "TAGS"` 
 
+
+### Advanced
 #### CHICKEN Installation
 To compile and build quick-commands from scratch you will need to use the CHICKEN Scheme to C Compiler.   
-#### Linux users
+##### Linux users
 CHICKEN should be available in most package management systems, although it's not always the latest version.   
 It already comes as part of Debian and Ubuntu.   
 For more details on the Linux availability check [here](http://wiki.call-cc.org/platforms#linux)  
-
 For any other information on the compiler please visit the CHICKEN [website] (http://code.call-cc.org/)  
-
-#### Compilation
+#### Install needed eggs  
+Once chicken is installed run the following to add the needed extentions:
+`chicken-install sqlite3 posix args srfi-13`  
+#### Compile source
+Create object code:  
+`csc -c cli.scm main.scm`  
+Portable executable:  
+`csc -deploy cli.o main.o -o qc`  
+(Optional) Install extentions inside qc folder:  
+`chicken-install -deploy -p qc sqlite3 posix args srfi-13`
+Copy the database to $HOME directory:
+`cp -a resources/qcommands.db $HOME`
+The $HOME directory is where quick commands will look for the database.
 
 
 
