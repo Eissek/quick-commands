@@ -52,7 +52,22 @@ Update:
 
 
 
-## Build
+## Build  
+### Easy
+#### Build using Make
+After downloading the code or cloning the repository. Use make to build 
+the executable by running the following command:  
+`Make all`   
+
+This should
+* download Chicken  
+* install the needed eggs (extentions)  
+* compiles the scm files  
+* install quick-commands in $HOME/bin/qc directory  
+
+Now run the qc executable from the $HOME/bin/qc directory.
+`cd ~/bin/qc/`
+
 #### CHICKEN Installation
 To compile and build quick-commands from scratch you will need to use the CHICKEN Scheme to C Compiler.   
 #### Linux users
