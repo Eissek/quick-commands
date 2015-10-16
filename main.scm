@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; quick-commands v. 0.94
+; quick-commands v. 0.10.0
 ; main.scm
 ; Created by Eissek
 ; 13 September 2015

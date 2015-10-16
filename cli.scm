@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; qucik-commands v. 0.94
+;; qucik-commands v. 0.10.0
 ;; cli.scm
 ;; Created by Eissek
 ;; 21 September 2015
@@ -72,3 +72,7 @@
                           (handle-cmd-line-arguments update-command arg))))
 
 (args:parse (command-line-arguments) opts)
+;; Print usage help if no args are provided
+(if (= 0 (length (command-line-arguments)))
+    (usage))
+
