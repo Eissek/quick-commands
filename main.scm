@@ -140,7 +140,7 @@
 (define (fill-remainder length string fill)
   (let ((spaces-left
 	 (- length (string-length string))))
-    (make-string spaces-left #\space)))
+    (string-append string (make-string spaces-left #\space))))
 
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
