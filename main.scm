@@ -142,6 +142,12 @@
 	 (- length (string-length string))))
     (string-append string (make-string spaces-left #\space))))
 
+(define (split-row str length)
+  (let ((split (if (< (string-length str) 10)
+		   (list (fill-remainder str length #\space))
+		   (append (list (string-take str 10)
+				 (string-drop str 10))))))))
+
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
   (let ((row-count (get-row-count))
