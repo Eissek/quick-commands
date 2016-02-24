@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="manual.css" type="text/css" /></head>
+<title>Chicken &raquo; Extensions</title>
+<meta name="viewport" content="initial-scale=1" /></html>
+<body>
+<div id="body">
+<div id="main">
+<div id="toc">
+<h2 class="toc">TOC &raquo;</h2>
+<ul class="toc">
+<li><a href="#sec:Extensions">Extensions</a>
+<ul>
+<li><a href="#sec:Extension_libraries">Extension libraries</a></li>
+<li><a href="#sec:Installing_extensions">Installing extensions</a>
+<ul>
+<li><a href="#sec:Installing_extensions_that_use_libraries">Installing extensions that use libraries</a></li></ul></li>
+<li><a href="#sec:Creating_extensions">Creating extensions</a></li>
+<li><a href="#sec:Procedures_and_macros_available_in_setup_scripts">Procedures and macros available in setup scripts</a>
+<ul>
+<li><a href="#sec:install-extension">install-extension</a>
+<ul>
+<li><a href="#sec:syntax">syntax</a></li>
+<li><a href="#sec:require-at-runtime">require-at-runtime</a></li>
+<li><a href="#sec:import-only">import-only</a></li>
+<li><a href="#sec:version">version</a></li>
+<li><a href="#sec:egg-name">egg-name</a></li></ul></li>
+<li><a href="#sec:install-program">install-program</a></li>
+<li><a href="#sec:install-script">install-script</a></li>
+<li><a href="#sec:standard-extension">standard-extension</a></li>
+<li><a href="#sec:run">run</a></li>
+<li><a href="#sec:compile">compile</a></li>
+<li><a href="#sec:patch">patch</a></li>
+<li><a href="#sec:copy-file">copy-file</a></li>
+<li><a href="#sec:move-file">move-file</a></li>
+<li><a href="#sec:remove-file.2a">remove-file*</a></li>
+<li><a href="#sec:find-library">find-library</a></li>
+<li><a href="#sec:find-header">find-header</a></li>
+<li><a href="#sec:try-compile">try-compile</a></li>
+<li><a href="#sec:create-directory.2fparents">create-directory/parents</a></li>
+<li><a href="#sec:extension-name-and-version">extension-name-and-version</a></li>
+<li><a href="#sec:version.3e.3d.3f">version&gt;=?</a></li>
+<li><a href="#sec:installation-prefix">installation-prefix</a></li>
+<li><a href="#sec:program-path">program-path</a></li>
+<li><a href="#sec:setup-root-directory">setup-root-directory</a></li>
+<li><a href="#sec:setup-install-mode">setup-install-mode</a></li>
+<li><a href="#sec:host-extension">host-extension</a></li></ul></li>
+<li><a href="#sec:Examples_for_extensions">Examples for extensions</a>
+<ul>
+<li><a href="#sec:A_simple_library">A simple library</a></li>
+<li><a href="#sec:An_application">An application</a></li>
+<li><a href="#sec:A_module_exporting_syntax">A module exporting syntax</a></li>
+<li><a href="#sec:Notes_on_chicken-install">Notes on chicken-install</a></li></ul></li>
+<li><a href="#sec:chicken-install_reference">chicken-install reference</a></li>
+<li><a href="#sec:chicken-uninstall_reference">chicken-uninstall reference</a></li>
+<li><a href="#sec:chicken-status_reference">chicken-status reference</a></li>
+<li><a href="#sec:Security">Security</a></li>
+<li><a href="#sec:Changing_repository_location">Changing repository location</a>
+<ul>
+<li><a href="#sec:Upgrading">Upgrading</a></li></ul></li>
+<li><a href="#sec:Other_modes_of_installation">Other modes of installation</a></li></ul></li></ul></div><h2 id="sec:Extensions"><a href="#sec:Extensions">Extensions</a></h2><h3 id="sec:Extension_libraries"><a href="#sec:Extension_libraries">Extension libraries</a></h3><p>Extension libraries (<i>eggs</i>) are extensions to the core functionality provided by the basic CHICKEN system, to be built and installed separately.  The mechanism for loading compiled extensions is based on dynamically loadable code and as such is only available on systems on which loading compiled code at runtime is supported. Currently these are most UNIX-compatible platforms that provide the <tt>libdl</tt> functionality like Linux, Solaris, BSD, Mac OS X and Windows using Cygwin.</p><p>Note: Extension may also be normal applications or shell scripts, but are usually libraries.</p><p>Extensions are technically nothing but dynamically loadable compiled files with added meta-data that describes dependencies to other extensions, version information and things like the author/maintainer of the extension. Three tools provide an easy to use interface for installing extensions, removing them and querying the current status of installed extensions.</p><h3 id="sec:Installing_extensions"><a href="#sec:Installing_extensions">Installing extensions</a></h3><p>To install an extension library, run the <tt>chicken-install</tt> program with the extension name as argument. The extension archive is downloaded, its contents extracted and the contained <i>setup</i> script is executed. This setup script is a normal Scheme source file, which will be interpreted by <tt>chicken-install</tt>. The complete language supported by <tt>csi</tt> is available, and the library units <tt>srfi-1 regex utils posix tcp</tt> are loaded. Additional libraries can be loaded at run-time.</p><p>The setup script should perform all necessary steps to build the new library (or application). After a successful build, the extension can be installed by invoking one of the procedures <tt>install-extension</tt>, <tt>install-program</tt> or <tt>install-script</tt>.  These procedures will copy a number of given files into the local extension repository or in the path where the CHICKEN executables are located (in the case of executable programs or scripts). Additionally the list of installed files, and user-defined metadata is stored in the repository.</p><p>If no extension name is given on the command-line, then all <tt>.setup</tt> scripts in the current directory are processed, in the order given on the command line.</p><h4 id="sec:Installing_extensions_that_use_libraries"><a href="#sec:Installing_extensions_that_use_libraries">Installing extensions that use libraries</a></h4><p>Sometimes an extension requires a C library to compile. Compilation can fail when your system has this library in a nonstandard location. Normally the C compiler searches in the default locations <tt>/usr</tt> and <tt>/usr/local</tt>, and in the prefix where CHICKEN itself was installed. Sometimes this is not enough, so you'll need to supply <tt>chicken-install</tt> with some extra hints to the C compiler/linker. Here's an example:</p><pre> CSC_OPTIONS='-I/usr/pkg/include/mysql -L/usr/pkg/lib/mysql -L -R/usr/pkg/lib/mysql' chicken-install mysql</pre><p>This installs the mysql egg with the extra compiler options -I and -L to set the include path and the library search path. The second -L switch passes the -R option directly to the linker, which causes the library path to get hardcoded into the resulting extension file (for systems that do not use <tt>ld.so.conf</tt>).</p><p>The environment variables <tt>CHICKEN_C_INCLUDE_PATH</tt> and <tt>CHICKEN_C_LIBRARY_PATH</tt> can also be used to override include- and linker-paths. Each of these variables may contain one or more directory names, separated by <tt>:</tt> or <tt>;</tt> and will be passed using <tt>-I</tt> and <tt>-L</tt> to the C compiler.</p><h3 id="sec:Creating_extensions"><a href="#sec:Creating_extensions">Creating extensions</a></h3><p>An extension can be created by placing its code and some special files in a directory named after it. For example, if your extension is called <tt>foo</tt>, create a directory called <tt>foo</tt> and put the extension code in it.</p><p>Extensions need two special files: an <tt>&lt;extension name&gt;.setup</tt> file and an <tt>&lt;extension name&gt;.meta</tt> file (where <tt>&lt;extension name&gt;</tt> is the name of your extension).  The former indicates how the egg is to be compiled and the latter provides some information about the extension (author, license, dependencies etc).  See the <a href="http://wiki.call-cc.org/eggs tutorial">eggs tutorial</a> for further information about how to create extensions.</p><h3 id="sec:Procedures_and_macros_available_in_setup_scripts"><a href="#sec:Procedures_and_macros_available_in_setup_scripts">Procedures and macros available in setup scripts</a></h3><h4 id="sec:install-extension"><a href="#sec:install-extension">install-extension</a></h4><dl class="defsig"><dt class="defsig" id="def:install-extension"><span class="sig"><tt>(install-extension ID FILELIST [INFOLIST])</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Installs the extension library with the name <tt>ID</tt>. All files given in the list of strings <tt>FILELIST</tt> will be copied to the extension repository. It should be noted here that the extension id has to be identical to the name of the file implementing the extension. The extension may load or include other files, or may load other extensions at runtime specified by the <tt>require-at-runtime</tt> property.</p><p><tt>FILELIST</tt> may be a filename, a list of filenames, or a list of pairs of the form <tt>(SOURCE DEST)</tt> (if you want to copy into a particular sub-directory - the destination directory will be created as needed). If <tt>DEST</tt> is a relative pathname, it will be copied into the extension repository.</p><p>The optional argument <tt>INFOLIST</tt> should be an association list that maps symbols to values, this list will be stored as <tt>ID.setup-info</tt> at the same location as the extension code. Currently the following properties are used:</p></dd>
+</dl>
+<h5 id="sec:syntax"><a href="#sec:syntax">syntax</a></h5><pre>[extension property] (syntax)</pre><p>Marks the extension as syntax-only. No code is compiled, the extension is intended as a file containing macros to be loaded at compile/macro-expansion time.</p><h5 id="sec:require-at-runtime"><a href="#sec:require-at-runtime">require-at-runtime</a></h5><pre>[extension property] (require-at-runtime ID ...)</pre><p>Specifies extensions that should be loaded (via <tt>require</tt>) at runtime. This is mostly useful for syntax extensions that need additional support code at runtime.</p><h5 id="sec:import-only"><a href="#sec:import-only">import-only</a></h5><pre> [extension property] (import-only)</pre><p>Specifies that this extension only provides a expansion-time code in an import library and does not require code to be loaded at runtime.</p><h5 id="sec:version"><a href="#sec:version">version</a></h5><pre>[extension property] (version STRING)</pre><p>Specifies version string.</p><h5 id="sec:egg-name"><a href="#sec:egg-name">egg-name</a></h5><pre>[extension property] (egg-name STRING)</pre><p>This is reserved for internal use. It is only listed here to tell you that you should avoid using this property.</p><h4 id="sec:install-program"><a href="#sec:install-program">install-program</a></h4><dl class="defsig"><dt class="defsig" id="def:install-program"><span class="sig"><tt>(install-program ID FILELIST [INFOLIST])</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Similar to <tt>install-extension</tt>, but installs an executable program in the executable path (usually <tt>/usr/local/bin</tt>).</p></dd>
+</dl>
+<h4 id="sec:install-script"><a href="#sec:install-script">install-script</a></h4><dl class="defsig"><dt class="defsig" id="def:install-script"><span class="sig"><tt>(install-script ID FILELIST [INFOLIST])</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Similar to <tt>install-program</tt>, but additionally changes the file permissions of all files in <tt>FILELIST</tt> to executable (for installing shell-scripts).</p></dd>
+</dl>
+<h4 id="sec:standard-extension"><a href="#sec:standard-extension">standard-extension</a></h4><dl class="defsig"><dt class="defsig" id="def:standard-extension"><span class="sig"><tt>(standard-extension ID [VERSION] #!key info)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>A convenience procedure that combines the compilation and installation of a simple single-file extension. This is roughly equivalent to:</p><pre> (compile -s -O3 -d1 ID.scm -j ID)
+ (compile -s -O3 -d0 ID.import.scm)
+ 
+ (install-extension
+  'ID
+  '(&quot;ID.so&quot; &quot;ID.import.so&quot;)
+  '((version 0.1)
+    ... `INFO' ...
+    ))</pre><p><tt>VERSION</tt> may be <tt>#f</tt> or can be omitted, in that case the version obtained from where the extension has been retrieved wil be taken. If installed directly from a local directory, the version will default to <tt>&quot;unknown&quot;</tt>.</p></dd>
+</dl>
+<h4 id="sec:run"><a href="#sec:run">run</a></h4><dl class="defsig"><dt class="defsig" id="def:run"><span class="sig"><tt>(run FORM ...)</tt></span> <span class="type">syntax</span></dt>
+<dd class="defsig"><p>Runs the shell command <tt>FORM</tt>, which is wrapped in an implicit <tt>quasiquote</tt>. <tt>(run (csc ...))</tt> is treated specially and passes <tt>-v</tt> (if <tt>-verbose</tt> has been given to <tt>chicken-install</tt>) and <tt>-feature compiling-extension</tt> options to the compiler.</p></dd>
+</dl>
+<h4 id="sec:compile"><a href="#sec:compile">compile</a></h4><dl class="defsig"><dt class="defsig" id="def:compile"><span class="sig"><tt>(compile FORM ...)</tt></span> <span class="type">syntax</span></dt>
+<dd class="defsig"><p>Equivalent to <tt>(run (csc FORM ...))</tt>.</p></dd>
+</dl>
+<h4 id="sec:patch"><a href="#sec:patch">patch</a></h4><dl class="defsig"><dt class="defsig" id="def:patch"><span class="sig"><tt>(patch WHICH REGEX SUBST)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Replaces all occurrences of the regular expression <tt>REGEX</tt> with the string <tt>SUBST</tt>, in the file given in <tt>WHICH</tt>. If <tt>WHICH</tt> is a string, the file will be patched and overwritten. If <tt>WHICH</tt> is a list of the form <tt>OLD NEW</tt>, then a different file named <tt>NEW</tt> will be generated.</p></dd>
+</dl>
+<h4 id="sec:copy-file"><a href="#sec:copy-file">copy-file</a></h4><dl class="defsig"><dt class="defsig" id="def:copy-file"><span class="sig"><tt>(copy-file FROM TO)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Copies the file or directory (recursively) given in the string <tt>FROM</tt> to the destination file or directory <tt>TO</tt>.</p></dd>
+</dl>
+<h4 id="sec:move-file"><a href="#sec:move-file">move-file</a></h4><dl class="defsig"><dt class="defsig" id="def:move-file"><span class="sig"><tt>(move-file FROM TO)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Moves the file or directory (recursively) given in the string <tt>FROM</tt> to the destination file or directory <tt>TO</tt>.</p></dd>
+</dl>
+<h4 id="sec:remove-file.2a"><a href="#sec:remove-file.2a">remove-file*</a></h4><dl class="defsig"><dt class="defsig" id="def:remove-file.2a"><span class="sig"><tt>(remove-file* PATH)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Removes the file or directory given in the string <tt>PATH</tt>, if it exists.</p></dd>
+</dl>
+<h4 id="sec:find-library"><a href="#sec:find-library">find-library</a></h4><dl class="defsig"><dt class="defsig" id="def:find-library"><span class="sig"><tt>(find-library NAME PROC)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Returns <tt>#t</tt> if the library named <tt>libNAME.[a|so]</tt> (unix) or <tt>NAME.lib</tt> (windows) could be found by compiling and linking a test program. <tt>PROC</tt> should be the name of a C function that must be provided by the library. If no such library was found or the function could not be resolved, <tt>#f</tt> is returned.</p></dd>
+</dl>
+<h4 id="sec:find-header"><a href="#sec:find-header">find-header</a></h4><dl class="defsig"><dt class="defsig" id="def:find-header"><span class="sig"><tt>(find-header NAME)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Returns <tt>#t</tt> if a C include-file with the given name is available, or <tt>#f</tt> otherwise.</p></dd>
+</dl>
+<h4 id="sec:try-compile"><a href="#sec:try-compile">try-compile</a></h4><dl class="defsig"><dt class="defsig" id="def:try-compile"><span class="sig"><tt>(try-compile CODE #!key cc cflags ldflags compile-only c++)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Returns <tt>#t</tt> if the C code in <tt>CODE</tt> compiles and links successfully, or <tt>#f</tt> otherwise. The keyword parameters <tt>cc</tt> (compiler name, defaults to the C compiler used to build this system), <tt>cflags</tt> and <tt>ldflags</tt> accept additional compilation and linking options. If <tt>compile-only</tt> is true, then no linking step takes place. If the keyword argument <tt>c++</tt> is given and true, then the code will be compiled in C++ mode.</p></dd>
+</dl>
+<h4 id="sec:create-directory.2fparents"><a href="#sec:create-directory.2fparents">create-directory/parents</a></h4><dl class="defsig"><dt class="defsig" id="def:create-directory.2fparents"><span class="sig"><tt>(create-directory/parents PATH)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Creates the directory given in the string <tt>PATH</tt>, with all parent directories as needed.</p></dd>
+</dl>
+<h4 id="sec:extension-name-and-version"><a href="#sec:extension-name-and-version">extension-name-and-version</a></h4><dl class="defsig"><dt class="defsig" id="def:extension-name-and-version"><span class="sig"><tt>extension-name-and-version</tt></span> <span class="type">parameter</span></dt>
+<dd class="defsig"><p>Returns a list containing the name and version of the currently installed extension as strings. If the setup script is not invoked via <tt>chicken-install</tt>, then name and version will be empty.</p></dd>
+</dl>
+<h4 id="sec:version.3e.3d.3f"><a href="#sec:version.3e.3d.3f">version&gt;=?</a></h4><dl class="defsig"><dt class="defsig" id="def:version.3e.3d.3f"><span class="sig"><tt>(version&gt;=? V1 V2)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>Compares the version numbers <tt>V1</tt> and <tt>V2</tt> and returns <tt>#t</tt> if <tt>V1</tt> is &quot;less&quot; than <tt>V2</tt> or <tt>#f</tt> otherwise. A version number can be an integer, a floating-point number or a string. <tt>version&gt;=?</tt> handles dot-separated version-indicators of the form <tt>&quot;X.Y. ..&quot;</tt>.</p><p>If one version number is the prefix of the other, then the shorter version is considered &quot;less&quot; than the longer.</p></dd>
+</dl>
+<h4 id="sec:installation-prefix"><a href="#sec:installation-prefix">installation-prefix</a></h4><dl class="defsig"><dt class="defsig" id="def:installation-prefix"><span class="sig"><tt>(installation-prefix)</tt></span> <span class="type">procedure</span></dt>
+<dd class="defsig"><p>An alternative installation prefix that will be prepended to extension installation paths if specified. It is set by the <tt>-prefix</tt> option or environment variable <tt>CHICKEN_INSTALL_PREFIX</tt>.</p></dd>
+</dl>
+<h4 id="sec:program-path"><a href="#sec:program-path">program-path</a></h4><dl class="defsig"><dt class="defsig" id="def:program-path"><span class="sig"><tt>(program-path [PATH])</tt></span> <span class="type">parameter</span></dt>
+<dd class="defsig"><p>Holds the path where executables are installed and defaults to either <tt>$CHICKEN_PREFIX/bin</tt>, if the environment variable <tt>CHICKEN_PREFIX</tt> is set or the path where the CHICKEN binaries (<tt>chicken</tt>, <tt>csi</tt>, etc.) are installed.</p></dd>
+</dl>
+<h4 id="sec:setup-root-directory"><a href="#sec:setup-root-directory">setup-root-directory</a></h4><dl class="defsig"><dt class="defsig" id="def:setup-root-directory"><span class="sig"><tt>(setup-root-directory [PATH])</tt></span> <span class="type">parameter</span></dt>
+<dd class="defsig"><p>Contains the path of the directory where <tt>chicken-install</tt> was invoked.</p></dd>
+</dl>
+<h4 id="sec:setup-install-mode"><a href="#sec:setup-install-mode">setup-install-mode</a></h4><dl class="defsig"><dt class="defsig" id="def:setup-install-mode"><span class="sig"><tt>(setup-install-mode [BOOL])</tt></span> <span class="type">parameter</span></dt>
+<dd class="defsig"><p>Reflects the setting of the <tt>-no-install</tt> option, i.e. is <tt>#f</tt>, if <tt>-no-install</tt> was given to <tt>chicken-install</tt>.</p></dd>
+</dl>
+<h4 id="sec:host-extension"><a href="#sec:host-extension">host-extension</a></h4><dl class="defsig"><dt class="defsig" id="def:host-extension"><span class="sig"><tt>host-extension</tt></span> <span class="type">parameter</span></dt>
+<dd class="defsig"><p>For a cross-compiling CHICKEN, when compiling an extension, then it should be built for the host environment (as opposed to the target environment). This parameter is controlled by the <tt>-host</tt> command-line option. A setup script should perform the proper steps of compiling any code by passing <tt>-host</tt> when invoking <tt>csc</tt> or using the <tt>compile</tt> macro.</p></dd>
+</dl>
+<h3 id="sec:Examples_for_extensions"><a href="#sec:Examples_for_extensions">Examples for extensions</a></h3><h4 id="sec:A_simple_library"><a href="#sec:A_simple_library">A simple library</a></h4><p>The simplest case is a single file that does not export any syntax. For example</p>
+<pre class="highlight colorize"><span class="comment">;;;; hello.scm
+</span>
+<span class="paren1">(<span class="default"><i><span class="symbol">define</span></i> <span class="paren2">(<span class="default">hello name</span>)</span>
+  <span class="paren2">(<span class="default">print <span class="string">&quot;Hello, &quot;</span> name <span class="string">&quot; !&quot;</span></span>)</span> </span>)</span></pre><p>We need a <tt>.setup</tt> script to build and install our nifty extension:</p>
+<pre class="highlight colorize"><span class="comment">;;;; hello.setup
+</span>
+<span class="comment">;; compile the code into a dynamically loadable shared object
+</span><span class="comment">;; (will generate hello.so)
+</span><span class="paren1">(<span class="default">compile -s hello.scm</span>)</span>
+
+<span class="comment">;; Install as extension library
+</span><span class="paren1">(<span class="default">install-extension &#x27;hello <span class="string">&quot;hello.so&quot;</span></span>)</span></pre><p>Lastly, we need a file <tt>hello.meta</tt> defining a minimal set of properties:</p>
+<pre class="highlight colorize"><span class="comment">;;;; hello.meta
+</span>
+<span class="paren1">(<span class="default"><span class="paren2">(<span class="default">author <span class="string">&quot;Me&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">synopsis <span class="string">&quot;A cool hello-world library&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">license <span class="string">&quot;GPLv3&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">files <span class="string">&quot;hello.scm&quot;</span> <span class="string">&quot;hello.setup&quot;</span></span>)</span></span>)</span></pre><p>(for more information about available properties, see <a href="http://wiki.call-cc.org/Metafile reference">the metafile reference</a>)</p><p>After entering</p><pre>$ chicken-install</pre><p>at the shell prompt (and in the same directory where the two files exist), the file <tt>hello.scm</tt> will be compiled into a dynamically loadable library. If the compilation succeeds, <tt>hello.so</tt> will be stored in the repository, together with a file named <tt>hello.setup-info</tt> containing an a-list with metadata (what you stored above in <tt>hello.meta</tt>). If no extension name is given to <tt>chicken-install</tt>, it will simply execute the any files with the <tt>.setup</tt> extension it can find.</p><p>Use it like any other CHICKEN extension:</p><pre>$ csi -q
+#;1&gt; (require-library hello)
+; loading /usr/local/lib/chicken/4/hello.so ...
+#;2&gt; (hello &quot;me&quot;)
+Hello, me!
+#;3&gt;</pre><h4 id="sec:An_application"><a href="#sec:An_application">An application</a></h4><p>Here we create a simple application:</p>
+<pre class="highlight colorize"><span class="comment">;;;; hello2.scm
+</span>
+<span class="paren1">(<span class="default">print <span class="string">&quot;Hello, &quot;</span></span>)</span>
+<span class="paren1">(<span class="default">for-each <span class="paren2">(<span class="default"><i><span class="symbol">lambda</span></i> <span class="paren3">(<span class="default">x</span>)</span> <span class="paren3">(<span class="default">printf <span class="string">&quot;~A &quot;</span> x</span>)</span></span>)</span> <span class="paren2">(<span class="default">command-line-arguments</span>)</span></span>)</span>
+<span class="paren1">(<span class="default">print <span class="string">&quot;!&quot;</span></span>)</span></pre><p>We also need a setup script:</p>
+<pre class="highlight colorize"><span class="comment">;;;; hello2.setup
+</span>
+<span class="paren1">(<span class="default">compile hello2.scm</span>)</span>  <span class="comment">; compile `hello2&#x27;
+</span><span class="paren1">(<span class="default">install-program &#x27;hello2 <span class="string">&quot;hello2&quot;</span></span>)</span> <span class="comment">; name of the extension and files to be installed</span></pre>
+<pre class="highlight colorize"><span class="comment">;;;; hello2.meta
+</span>
+<span class="paren1">(<span class="default"><span class="paren2">(<span class="default">author <span class="string">&quot;Me&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">synopsis <span class="string">&quot;A cool hello-world application&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">license <span class="string">&quot;proprietary&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">files <span class="string">&quot;hello.scm&quot;</span> <span class="string">&quot;hello.setup&quot;</span></span>)</span></span>)</span></pre><p>To use it, just run <tt>chicken-install</tt> in the same directory:</p><pre>$ chicken-install</pre><p>(Here we omit the extension name)</p><p>Now the program <tt>hello2</tt> will be installed in the same location as the other CHICKEN tools (like <tt>chicken</tt>, <tt>csi</tt>, etc.), which will normally be <tt>/usr/local/bin</tt>.  Note that you need write-permissions for those locations and may have to run <tt>chicken-install</tt> with administrative rights or use the <tt>-sudo</tt> option.</p><p>The extension can be used from the command line:</p><pre>$ hello2 one two three
+Hello, 
+one two three !</pre><p>De-installation is just as easy - use the <tt>chicken-uninstall</tt> program to remove one or more extensions from the local repository:</p><pre>$ chicken-uninstall hello2</pre><h4 id="sec:A_module_exporting_syntax"><a href="#sec:A_module_exporting_syntax">A module exporting syntax</a></h4><p>The hello module was just a shared library, and not a module.</p><p>To create an extension that exports syntax see the chapter on <a href="Modules.html">Modules</a>.  We will show a simple example here: a module <tt>my-lib</tt> that exports one macro (<tt>prog1</tt>) and one procedure (<tt>my-sum</tt>):</p>
+<pre class="highlight colorize"><span class="comment">;;; my-lib.scm
+</span>
+<span class="paren1">(<span class="default">module my-lib
+  *
+  <span class="paren2">(<span class="default">import scheme chicken</span>)</span>
+
+<span class="paren2">(<span class="default"><i><span class="symbol">define-syntax</span></i> prog1
+  <span class="paren3">(<span class="default">syntax-rules <span class="paren4">(<span class="default"></span>)</span>
+    <span class="paren4">(<span class="default"><span class="paren5">(<span class="default">_ e1 e2 ...</span>)</span>
+     <span class="paren5">(<span class="default"><i><span class="symbol">let</span></i> <span class="paren6">(<span class="default"><span class="paren1">(<span class="default">result e1</span>)</span></span>)</span>
+       <span class="paren6">(<span class="default">begin e2 ...</span>)</span>
+       result</span>)</span></span>)</span></span>)</span></span>)</span>
+
+<span class="paren2">(<span class="default"><i><span class="symbol">define</span></i> my-sum
+  <span class="paren3">(<span class="default"><i><span class="symbol">lambda</span></i> <span class="paren4">(<span class="default">numbers</span>)</span>
+    <span class="paren4">(<span class="default">prog1
+      <span class="paren5">(<span class="default">apply + numbers</span>)</span>
+      <span class="paren5">(<span class="default">display <span class="string">&quot;my-sum used one more time!&quot;</span></span>)</span>
+      <span class="paren5">(<span class="default">newline</span>)</span></span>)</span></span>)</span></span>)</span>
+
+</span>)</span></pre><p>The <tt>prog1</tt> macro is similar to Common Lisp's <tt>prog1</tt>: it evaluates a list of forms, but returns the value of the first form.</p><p>The meta file:</p>
+<pre class="highlight colorize"><span class="comment">;;; my-lib.meta
+</span>
+<span class="paren1">(<span class="default"><span class="paren2">(<span class="default">files <span class="string">&quot;my-lib.setup&quot;</span>
+        <span class="string">&quot;my-lib.scm&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">licence <span class="string">&quot;BSD&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">author <span class="string">&quot;Me again&quot;</span></span>)</span>
+ <span class="paren2">(<span class="default">synopsis <span class="string">&quot;My own cool libraries&quot;</span></span>)</span></span>)</span></pre><p>The setup file is:</p>
+<pre class="highlight colorize"><span class="comment">;;; my-lib.setup
+</span>
+<span class="paren1">(<span class="default">compile -s -O3 -d1 <span class="string">&quot;my-lib.scm&quot;</span> -j my-lib</span>)</span>
+<span class="paren1">(<span class="default">compile -s -O3 -d0 <span class="string">&quot;my-lib.import.scm&quot;</span></span>)</span>
+
+<span class="paren1">(<span class="default">install-extension
+ &#x27;my-lib
+ &#x27;<span class="paren2">(<span class="default"><span class="string">&quot;my-lib.so&quot;</span> <span class="string">&quot;my-lib.import.so&quot;</span></span>)</span>
+ &#x27;<span class="paren2">(<span class="default"><span class="paren3">(<span class="default">version 1.0</span>)</span></span>)</span></span>)</span></pre><p>The first line tells the compiler to create a shared (<tt>-s</tt>) library and to create an import file (<tt>my-lib.import.scm</tt>, because of the <tt>-j</tt> flag).  The second line compiles the import file created by the first one.</p><p>IMPORTANT: the module name exported by my-lib.scm must be the same module name passed to the compiler using the -j option, otherwise the imports file will not be generated!</p><p>Running <tt>chicken-install</tt> on the same directory will install the extension.</p><p>Next, it should be possible to load the library:</p><pre>$ csi -q
+#;1&gt; (use my-lib)
+; loading /usr/local/lib/chicken/6/my-lib.import.so ...
+; loading /usr/local/lib/chicken/6/scheme.import.so ...
+; loading /usr/local/lib/chicken/6/chicken.import.so ...
+; loading /usr/local/lib/chicken/6/my-lib.so ...
+#;2&gt; (my-sum '(10 20 30))
+my-sum used one more time!
+60
+#;3&gt; (my-sum '(-1 1 0))
+my-sum used one more time!
+0
+#;4&gt; (prog1 (+ 2 2) (print &quot;---&quot;))
+---
+4</pre><h4 id="sec:Notes_on_chicken-install"><a href="#sec:Notes_on_chicken-install">Notes on chicken-install</a></h4><p>When running <tt>chicken-install</tt> with an argument <tt>NAME</tt>, for which no associated <tt>.setup</tt> file exists, then it will try to download the extension via HTTP from the CHICKEN code repository at <a href="http://code.call-cc.org/svn/chicken-eggs/">http://code.call-cc.org/svn/chicken-eggs/</a>. Extensions that are required to compile and/or use the requested extension are downloaded and installed automatically.</p><p>To query the list of currently installed extensions, use <tt>chicken-status</tt>. It can list what extensions are installed and what files belong to a particular installed extension.</p><h3 id="sec:chicken-install_reference"><a href="#sec:chicken-install_reference">chicken-install reference</a></h3><p>Available options:</p><dl><dt><tt>-h   -help</tt></dt>
+<dd>show this message and exit</dd><dt><tt>-version</tt></dt>
+<dd>show version and exit</dd><dt><tt>-force</tt></dt>
+<dd>don't ask, install even if versions don't match</dd><dt><tt>-k   -keep</tt></dt>
+<dd>keep temporary files</dd><dt><tt>-l   -location LOCATION</tt></dt>
+<dd>install from given location instead of default</dd><dt><tt>-t   -transport TRANSPORT</tt></dt>
+<dd>use given transport instead of default</dd><dt><tt>-list</tt></dt>
+<dd>list extensions available</dd><dt><tt>-proxy HOST[:PORT]</tt></dt>
+<dd>connect via HTTP proxy</dd><dt><tt>-s   -sudo</tt></dt>
+<dd>use <tt>sudo(1)</tt> for installing or removing files</dd><dt><tt>-r   -retrieve</tt></dt>
+<dd>only retrieve egg into current directory, don't install</dd><dt><tt>-n   -no-install</tt></dt>
+<dd>do not install, just build (implies <tt>-keep</tt>)</dd><dt><tt>-p   -prefix PREFIX</tt></dt>
+<dd>change installation prefix to <tt>PREFIX</tt></dd><dt><tt>-host</tt></dt>
+<dd>when cross-compiling, compile extension for host only</dd><dt><tt>-target</tt></dt>
+<dd>when cross-compiling, compile extension for target only</dd><dt><tt>-test</tt></dt>
+<dd>run included test-cases, if available</dd><dt><tt>-username USER</tt></dt>
+<dd>set username for transports that require this</dd><dt><tt>-password PASS</tt></dt>
+<dd>set password for transports that require this</dd><dt><tt>-i   -init DIRECTORY</tt></dt>
+<dd>initialize empty alternative repository</dd><dt><tt>-u   -update-db</tt></dt>
+<dd>update export database</dd><dt><tt>-repository</tt></dt>
+<dd>print path to extension repository</dd><dt><tt>-deploy</tt></dt>
+<dd>install extension in the application directory for a deployed application (see <a href="Deployment.html">Deployment</a> for more information)</dd><dt><tt>-trunk</tt></dt>
+<dd>build trunk instead of tagged version (only local)</dd><dt><tt>-D   -feature FEATURE</tt></dt>
+<dd>pass this on to subinvocations of <tt>csi</tt> and <tt>csc</tt> (when done via <tt>compile</tt> or <tt>(run (csc ...))</tt>)</dd><dt><tt>-debug</tt></dt>
+<dd>print full call-trace when encountering errors in the setup script</dd><dt><tt>-keep-going</tt></dt>
+<dd>continue installation, even if a dependency fails</dd><dt><tt>-x   -keep-installed</tt></dt>
+<dd>ignore those extensions given on the command line, that are already installed</dd><dt><tt>-reinstall</tt></dt>
+<dd>reinstall all currently installed extensions, keeping the current versions, if possible</dd><dt><tt>-scan DIRECTORY</tt></dt>
+<dd>scan local egg source repository for highest available versions</dd><dt><tt>-override FILENAME</tt></dt>
+<dd>override versions for installed eggs with information given in <tt>FILENAME</tt>, which can be generated by <tt>-scan</tt> or by the <tt>-list</tt> option of the <tt>chicken-status</tt> program</dd><dt><tt>-csi FILENAME</tt></dt>
+<dd>when invoking <tt>csi</tt>, the CHICKEN interpreter for executing installation scripts, use this program instead.</dd></dl>
+<p><tt>chicken-install</tt> recognizes the <tt>http_proxy</tt> and <tt>proxy_auth</tt> environment variables, if set.</p><h3 id="sec:chicken-uninstall_reference"><a href="#sec:chicken-uninstall_reference">chicken-uninstall reference</a></h3><dl><dt><tt>-h   -help</tt></dt>
+<dd>show usage information and exit</dd><dt><tt>-version</tt></dt>
+<dd>show version and exit</dd><dt><tt>-force</tt></dt>
+<dd>don't ask, delete whatever matches</dd><dt><tt>-s   -sudo</tt></dt>
+<dd>use <tt>sudo(1)</tt> for deleting files</dd><dt><tt>-host</tt></dt>
+<dd>when cross-compiling, remove extensions for host system only</dd><dt><tt>-target</tt></dt>
+<dd>when cross-compiling, remove extensions for target system only</dd><dt><tt>-exact</tt></dt>
+<dd>match extension-name exactly (do not match as pattern)</dd></dl>
+<h3 id="sec:chicken-status_reference"><a href="#sec:chicken-status_reference">chicken-status reference</a></h3><dl><dt><tt>-h   -help</tt></dt>
+<dd>show usage information and exit</dd><dt><tt>-version</tt></dt>
+<dd>show version and exit</dd><dt><tt>-f   -files</tt></dt>
+<dd>list installed files</dd><dt><tt>-host</tt></dt>
+<dd>when cross-compiling, show extensions for host system only</dd><dt><tt>-target</tt></dt>
+<dd>when cross-compiling, show extensions for target system only</dd><dt><tt>-exact</tt></dt>
+<dd>match extension-name exactly (do not match as pattern)</dd><dt><tt>-list</tt></dt>
+<dd>list installed egg version in format suitable for <tt>chicken-install -override</tt></dd></dl>
+<h3 id="sec:Security"><a href="#sec:Security">Security</a></h3><p>When extensions are downloaded and installed one is executing code from potentially compromised systems. This applies also when <tt>chicken-install</tt> executes system tests for required extensions. As the code has been retrieved over the network effectively untrusted code is going to be evaluated. When <tt>chicken-install</tt> is run as <i>root</i> the whole system is at the mercy of the build instructions (note that this is also the case every time you install software via <tt>sudo make install</tt>, so this is not specific to the CHICKEN extension mechanism).</p><p>Security-conscious users should never run <tt>chicken-install</tt> as root. A simple remedy is to keep the repository inside a user's home directory (see the section &quot;Changing repository location&quot; below). Alternatively obtain write/execute access to the default location of the repository (usually <tt>/usr/local/lib/chicken</tt>) to avoid running as root. <tt>chicken-install</tt> also provides a <tt>-sudo</tt> option to perform the last installation steps as root user, but do building and other .setup script processing as normal. A third solution is to override <tt>VARDIR</tt> when building the system (for example by passing <tt>&quot;VARDIR=/foo/bar&quot;</tt> on the make command line, or by modifying <tt>config.make</tt>. Eggs will then be installed in <tt>$(VARDIR)/chicken/5</tt>.</p><h3 id="sec:Changing_repository_location"><a href="#sec:Changing_repository_location">Changing repository location</a></h3><p>When CHICKEN is installed a repository for eggs is created and initialized in a default location (usually something like <tt>/usr/local/lib/chicken/6/</tt>). It is possible to keep an eggs repository in another location. This can be configured at build-time by passing <tt>VARDIR=&lt;directory&gt;</tt> to <tt>make(3)</tt> or by modifying the <tt>config.make</tt> configuration file. If you want to override this location after chicken is installed, you can create an initial repository directory with some default extensions and set the <tt>CHICKEN_REPOSITORY</tt> environment variable:</p><p>Note that your binary version can differ from the examples here, if your chicken version is older or newer than the one used in these examples. Check your default location for the correct binary-version number.</p><p>First, initialize the new repository with</p><pre> mkdir -p ~/myeggs/lib/chicken/6               # to create directory structure
+ chicken-install -init ~/myeggs/lib/chicken/6</pre><p>Then set this environment variable:</p><pre> export CHICKEN_REPOSITORY=~/myeggs/lib/chicken/6</pre><p><tt>CHICKEN_REPOSITORY</tt> is the place where extensions are to be loaded from for all chicken-based programs (which includes all the tools).</p><p>If you want to install eggs somewhere other than the default or your environment variable, you can use</p><pre> chicken-install -p ~/myeggs &lt;package&gt;</pre><p>See that the argument to chicken-install is just <tt>~/myeggs</tt>, while everywhere else it's <tt>~/myeggs/lib/chicken/5</tt>.</p><p>When you load eggs from the interpreter, you will see messages showing where libraries are being loaded from:</p><pre>#;1&gt; (use numbers)
+; loading /home/jdoe/myeggs/lib/chicken/6/numbers.import.so ...
+; loading /home/jdoe/myeggs/lib/chicken/6/scheme.import.so ...
+; loading /home/jdoe/myeggs/lib/chicken/6/chicken.import.so ...
+; loading /home/jdoe/myeggs/lib/chicken/6/foreign.import.so ...
+; loading /home/jdoe/myeggs/lib/chicken/6/regex.import.so ...
+; loading /home/jdoe/myeggs/lib/chicken/6/numbers.so ...
+#;2&gt;</pre><h4 id="sec:Upgrading"><a href="#sec:Upgrading">Upgrading</a></h4><p>After a main upgrade, you need to reinstall all the eggs. First, reset the repository environment variable:</p><pre> export CHICKEN_REPOSITORY=/usr/lib/chicken/6</pre><p>Then, make a new directory that reflects the systematic one:</p><pre> mkdir ~/myeggs/lib/chicken/6</pre><p>After that, do the same steps above for the new directory (initialize, set repository environment variable) and reinstall all the eggs.</p><h3 id="sec:Other_modes_of_installation"><a href="#sec:Other_modes_of_installation">Other modes of installation</a></h3><p>It is possible to install extensions directly from a <a href="http://subversion.apache.org/">Subversion</a> repository or from a local checkout of the repository tree by using the <tt>-transport</tt> and <tt>-location</tt> options when invoking <tt>chicken-install</tt>. Three possible transport mechanisms are currently supported:</p><dl><dt><tt>http</tt></dt>
+<dd>download extension sources via HTTP from a web-server (this is the default)</dd><dt><tt>svn</tt></dt>
+<dd>perform an <tt>svn export</tt> from the central extension repository; this will require a <tt>svn(1)</tt> client to be installed on the machine</dd><dt><tt>local</tt></dt>
+<dd>use sources from the local filesystem and build directly in the source directory</dd></dl>
+<p>The <tt>-location</tt> option specifies where to look for the source repository and names a web URL, a subversion repository URL or a filesystem path, respectively. A list of locations to try when retrieving extensions is stored in the file <tt>setup.defaults</tt> (usually installed in <tt>/usr/local/share/chicken</tt>). For <tt>http</tt> transports, <tt>chicken-install</tt> will detect networking timeouts and try alternative locations, as listed in the file.</p><p>Dependency information, which is necessary to ensure required extensions are also installed, is processed automatically.</p><hr /><p>Previous: <a href="Interface%20to%20external%20functions%20and%20variables.html">Interface to external functions and variables</a></p><p>Next: <a href="Deployment.html">Deployment</a></p></div></div></body>

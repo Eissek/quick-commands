@@ -19,8 +19,11 @@
 
 ;; (print "hello")
 
-(define db-path (string-append
-                 (get-environment-variable "HOME") "/qcommands.db"))
+;; (define db-path (string-append
+;;                  (get-environment-variable "HOME") "/qcommands.db"))
+
+(define db-path
+  "/media/sf_Projects/Chicken/quick-commands/test-db/qcommands-test.db")
 
 ;; maybe create database from schema if not found
 (if (not (file-exists? db-path))
@@ -79,6 +82,7 @@
               (else (print "Incorrect number of arguments")
                     (print args)))))))))
 
+
 ;; (define (search-commands))
 (define (print-commands . cmd)
   (let ((new-cmd (append
@@ -128,6 +132,15 @@
         (let ((command (map-row print-commands select-all)))
           command))))))
 
+
+(define (print-commands-table .)
+  (print "hi"))
+
+
+(define (fill-remainder length string fill)
+  (let ((spaces-left
+	 (- length (string-length string))))
+    (make-string spaces-left #\space)))
 
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
