@@ -137,7 +137,8 @@
   (print "hi"))
 
 
-(define (fill-remainder length string fill)
+;; may need to return list
+(define (fill-remainder string length fill)
   (let ((spaces-left
 	 (- length (string-length string))))
     (string-append string (make-string spaces-left #\space))))
@@ -146,7 +147,8 @@
   (let ((split (if (< (string-length str) 10)
 		   (list (fill-remainder str length #\space))
 		   (append (list (string-take str 10)
-				 (string-drop str 10))))))))
+				 (string-drop str 10))))))
+    split))
 
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
