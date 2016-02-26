@@ -158,6 +158,24 @@
 	 (set! current-row (append current-row (car new-list)))
 	 (set! next-row (append next-row (cdr new-list))))))
 
+
+(define (create-rows row-list)
+  (let ((row1 '())
+	(row2 '())
+	(row3 '())
+	(i 1)
+	(cmd (car row-list))
+	(desc (car (cdr row-list)))
+	;; (tags (car (cdr (cdr row-list))))
+	(tags (string-join (cdr (cdr row-list)) " ")))
+    (define (parse-row row)
+      (if (< (length row) 3)
+	  (cond ((eq? row1 row) "HEY")
+		((eq? row2 row) "row2 ss")
+		((eq? row3 row) "YAAAAAAAAAS"))))
+    (parse-row row2)))
+
+
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
   (let ((row-count (get-row-count))
