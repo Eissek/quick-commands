@@ -169,11 +169,11 @@
 	;; (tags (car (cdr (cdr row-list))))
 	(tags (string-join (cdr (cdr row-list)) " ")))
     (define (parse-row row)
-      (if (< (length row) 3)
-	  (cond ((eq? row1 row) "HEY")
-		((eq? row2 row) "row2 ss")
-		((eq? row3 row) "YAAAAAAAAAS"))))
-    (parse-row row2)))
+      (if (< (length (list row)) 3)
+	  (cond ((eq? 'row1 row) "HEY")
+		((eq? 'row2 row) "row2 ss")
+		((eq? 'row3 row) "YAAAAAAAAAS"))))
+    (parse-row 'row1)))
 
 
 (define (add-command . args)
