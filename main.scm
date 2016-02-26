@@ -150,6 +150,14 @@
 				 (string-drop str 10))))))
     split))
 
+
+(define (set-single-or-combined new-list  current-row next-row)
+  (cond ((= (length new-list) 1)
+	 (set! current-row (append current-row new-list)))
+	((= (length new-list) 2)
+	 (set! current-row (append current-row (car new-list)))
+	 (set! next-row (append next-row (cdr new-list))))))
+
 (define (add-command . args)
   ;; args stucture (command description tag1 tag2...)
   (let ((row-count (get-row-count))
