@@ -170,9 +170,17 @@
 	(tags (string-join (cdr (cdr row-list)) " ")))
     (define (parse-row row)
       (if (< (length (list row)) 3)
-	  (cond ((eq? 'row1 row) "HEY")
-		((eq? 'row2 row) "row2 ss")
-		((eq? 'row3 row) "YAAAAAAAAAS"))))
+	  (cond ((eq? 'row1 row) (print "HEY"))
+		((eq? 'row2 row) (print "row2 ss"))
+		((eq? 'row3 row) (print "YAAAAAAAAAS"))))
+      
+      (if (not (eq? 'row3 row))
+	      (begin (set! i (+ i 1))
+		     (print i)
+		     (parse-row
+		      (string->symbol
+		       (string-append "row" (number->string i))))))
+      )
     (parse-row 'row1)))
 
 
