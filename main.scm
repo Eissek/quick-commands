@@ -151,7 +151,7 @@
     split))
 
 
-(define (set-single-or-combined new-list  current-row next-row)
+(define (set-single-or-combined new-list current-row next-row)
   (cond ((= (length new-list) 1)
 	 (set! current-row (append current-row new-list)))
 	((= (length new-list) 2)
@@ -170,7 +170,16 @@
 	(tags (string-join (cdr (cdr row-list)) " ")))
     (define (parse-row row)
       (if (< (length (list row)) 3)
-	  (cond ((eq? 'row1 row) (print "HEY"))
+	  (cond ((eq? 'row1 row)
+		 (print "HEY")
+		 (map (lambda (str)
+			(let ((split-list (split-row str 10)))
+			  (if (= (length split-list) 1)
+			      (set! row1 (append row1 split-list))
+			      (begin (set! row1 (append row1 (list (car split-list))))
+				     (set! row2 (append row2 (list (cdr split-list)))))))
+			) '("cmmmmmmmmd" "desc" "tagggggggggs" ))
+		 (print row1))
 		((eq? 'row2 row) (print "row2 ss"))
 		((eq? 'row3 row) (print "YAAAAAAAAAS"))))
       
