@@ -145,7 +145,8 @@
 
 (define (split-row str length)
   (let ((split (if (< (string-length str) 10)
-		   (list (fill-remainder str length #\space))
+		   (append (list (fill-remainder str length #\space))
+			   (list (make-string 10 #\space)))
 		   (append (list (string-take str 10)
 				 (string-drop str 10))))))
     split))
@@ -182,6 +183,7 @@
 				     (set! current-buffer (append current-buffer (cdr split-list))))))
 			) '("cmd" "descdddddddddd" "tagggggggggs" ))
 		 (print row1))
+		
 		((eq? 'row2 row) (print "row2 ss") 
 		 (map (lambda (str)
 		 	(let ((split-list (split-row str 10)))
