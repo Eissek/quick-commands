@@ -143,10 +143,13 @@
 	 (- length (string-length string))))
     (string-append string (make-string spaces-left #\space))))
 
+(define (add-bar str)
+  (string-append str "|"))
+
 (define (split-row str length)
   (let ((split (if (< (string-length str) 10)
-		   (append (list (fill-remainder str length #\space))
-			   (list (make-string 10 #\space)))
+		   (append (list (fill-remainder str length #\space)
+				 (make-string 10 #\space)))
 		   (append (list (string-take str 10)
 				 (string-drop str 10))))))
     split))
@@ -182,7 +185,7 @@
 				     ;; (set! row2 (append row2 (cdr split-list)))
 				     (set! current-buffer (append current-buffer (cdr split-list))))))
 			) '("cmd" "descdddddddddd" "tagggggggggs" ))
-		 (print row1))
+		 (print (map add-bar row1)))
 		
 		((eq? 'row2 row) (print "row2 ss") 
 		 (map (lambda (str)
@@ -197,7 +200,7 @@
 			  
 		 	  )) ;; row2
 			     (take current-buffer 3))
-		 (print row2)
+		 (print (map add-bar row2))
 		 )
 		((eq? 'row3 row) (print "YAAAAAAAAAS")
 		 (map (lambda (str)
@@ -205,7 +208,7 @@
 			  ;; (if (= (length split-list) 1))
 			  (set! row3 (append row3 (list (car split-list))))
 			  )) (drop current-buffer 3))
-		 (print row3))))
+		 (print (map add-bar row3)))))
       
       (if (not (eq? 'row3 row))
 	      (begin (set! i (+ i 1))
