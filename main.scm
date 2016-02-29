@@ -146,6 +146,9 @@
 (define (add-bar str)
   (string-append str "|"))
 
+;; (define (add-newline str)
+;;   )
+
 (define (split-row str length)
   (let ((split (if (< (string-length str) 10)
 		   (append (list (fill-remainder str length #\space)
@@ -162,6 +165,11 @@
 	 (set! current-row (append current-row (car new-list)))
 	 (set! next-row (append next-row (cdr new-list))))))
 
+
+(define (add-bar-and-newline row1 row2 row3)
+  (string-join (map (lambda (x)
+	  (string-append (string-join x "|" 'suffix) "\n"))
+	(list row1 row2 row3)) ""))
 
 (define (create-rows row-list)
   (let ((row1 '())
@@ -184,13 +192,13 @@
 			      (begin (set! row1 (append row1 (list (car split-list))))
 				     ;; (set! row2 (append row2 (cdr split-list)))
 				     (set! current-buffer (append current-buffer (cdr split-list))))))
-			) '("cmd" "descdddddddddd" "tagggggggggs" ))
+			) '("cmdsssssssssssssss" "descdddddddddd" "tagggggggggs"))
 		 (print (map add-bar row1)))
 		
 		((eq? 'row2 row) (print "row2 ss") 
 		 (map (lambda (str)
 		 	(let ((split-list (split-row str 10)))
-			  ;; (print split-list)
+			  (print split-list)
 			  ;; (print (length split-list))
 		 	  (if (= (length split-list) 1)
 		 	      (set! row2 (append row2 split-list))
@@ -215,7 +223,13 @@
 		     (print i)
 		     (parse-row
 		      (string->symbol
-		       (string-append "row" (number->string i))))))
+		       (string-append "row" (number->string i)))))
+	      ;; (print (map add-bar (append row1 row2 row3)))
+	      ;; (append (map (lambda (x)
+	      ;; 		     (add-bar x)) (append row1 row2)))
+	      ;; (print (string-append
+	      ;; 	(string-join (append row1 row2) "|" 'suffix) "\n"))
+	      (print (add-bar-and-newline row1 row2 row3)))
       )
     (parse-row 'row1)))
 
