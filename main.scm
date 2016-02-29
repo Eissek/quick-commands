@@ -84,7 +84,7 @@
 
 
 ;; (define (search-commands))
-(define (print-commands . cmd)
+(define (print-commands . cmd) ;; was originall . cmd
   (let ((new-cmd (append
                   '("\n")
                   (list (number->string (car cmd)))
@@ -94,7 +94,7 @@
 
 #;(define (print-row . row) (string-join row))
 
-(define (search-commands . cmd)
+(define (search-commands . cmd) 
   (call-with-current-continuation
    (lambda (k)
      (with-exception-handler
@@ -129,7 +129,7 @@
         (k "Error. Could not list commands")
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
-        (let ((command (map-row print-commands select-all)))
+        (let ((command (map-row create-rows select-all)))
           command))))))
 
 
@@ -171,17 +171,25 @@
 	  (string-append (string-join x "|" 'suffix) "\n"))
 	(list row1 row2 row3)) ""))
 
-(define (create-rows row-list)
+(define (create-rows . row-list)
   (let ((row1 '())
 	(row2 '())
 	(row3 '())
 	(i 1)
-	(cmd (car row-list))
-	(desc (car (cdr row-list)))
+	(rowid (car row-list))
+	(cmd (car (cdr row-list)))
+	(desc (car (cdr (cdr row-list))))
 	;; (tags (car (cdr (cdr row-list))))
-	(tags (string-join (cdr (cdr row-list)) " "))
+        (tags (string-join (cdr (cdr (cdr row-list))) " "))
 	(current-buffer '()))
     (define (parse-row row)
+      ;; (print row-list)
+      ;; (print rowid)
+      ;; (print cmd )
+      ;; (print desc)
+      ;; (print tags)
+      ;; ;; (print (split-row cmd 10))
+      ;; (print (list cmd desc tags))
       (if (< (length (list row)) 3)
 	  (cond ((eq? 'row1 row)
 		 (print "HEY")
@@ -192,7 +200,7 @@
 			      (begin (set! row1 (append row1 (list (car split-list))))
 				     ;; (set! row2 (append row2 (cdr split-list)))
 				     (set! current-buffer (append current-buffer (cdr split-list))))))
-			) '("cmdsssssssssssssss" "descdddddddddd" "tagggggggggs"))
+			) (list cmd desc tags))
 		 (print (map add-bar row1)))
 		
 		((eq? 'row2 row) (print "row2 ss") 
