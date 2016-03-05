@@ -179,6 +179,38 @@
 	((= counter 2) "desc")
 	((= counter 3) "tags")))
 
+(define (splitter args) ;; used to have several args
+  (let ((row1 (car args))
+	(row2 (car (cdr args)))
+	(row3 (car (cdr (cdr args))))
+	(i (car (cdr (cdr (cdr args))))))
+   (if (> i 3)
+       ;; (parse-row 'row2 first-row next-row '() 0)
+       (parse-row (string->symbol
+		   (string-append "row" (number->string (+ i 1))))
+		  first-row next-row '() 0)
+      (let* ((split-list (split-row (select-column i) 10))
+	    (next-column (select-column i))
+	    (rows (cond ((= i 1)
+			 (append row1 (list (car split-list)))
+			 (append row2 (list (cdr split-list)))
+			 row3
+			 (+ i 1))
+			((= i 2)
+			 row1
+			 (append row2 (list (car split-list)))
+			 (append row3 (list (cdr split-list)))
+			 (+ i 1))
+			((= i 3)
+			 row1
+			 row2
+			 (append row3 (list (car split-list)))
+			 (+ i 1)))))
+	(if (> (length split-list) 0)
+	    (splitter rows)))) )
+  )
+
+
 (define (create-rows row-list)
   (let ((rowid (car row-list))
 	(cmd (car (cdr row-list)))
@@ -197,25 +229,27 @@
 	(if (< (length (list this-row)) 3)
 	    
 	    (cond ((eq? 'row1 this-row)
-		   (letrec ((splitter
-			     (lambda (first-row next-row i)
-			       (if (> i 3)
-				   (parse-row 'row2 first-row next-row '() 0) ;;maybe use next-row as selected row
-				   (let ((split-list (split-row (select-column i) 10))
-					 (next-column (select-column i)))
-				     (if (= (length split-list) 1)
-					 (splitter
-					  (append
-					   first-row split-list
-					   next-row
-					   (+ i 1)))
-					 (splitter
-					  (append first-row (list (car split-list)))
-					  (append next-row (list (car (cdr split-list))))
-					  (+ i 1)
-					  ;; next-column
-					  )))))))
-		     (splitter row1 row2 1)))
+		   (splitter (list row1 row2 row3 1))
+		   ;; (letrec ((splitter
+		   ;; 	     (lambda (first-row next-row i)
+		   ;; 	       (if (> i 3)
+		   ;; 		   (parse-row 'row2 first-row next-row '() 0) ;;maybe use next-row as selected row
+		   ;; 		   (let ((split-list (split-row (select-column i) 10))
+		   ;; 			 (next-column (select-column i)))
+		   ;; 		     (if (= (length split-list) 1)
+		   ;; 			 (splitter
+		   ;; 			  (append
+		   ;; 			   first-row split-list
+		   ;; 			   next-row
+		   ;; 			   (+ i 1)))
+		   ;; 			 (splitter
+		   ;; 			  (append first-row (list (car split-list)))
+		   ;; 			  (append next-row (list (car (cdr split-list))))
+		   ;; 			  (+ i 1)
+		   ;; 			  ;; next-column
+		   ;; 			  )))))))
+		   ;;   (splitter row1 row2 1))
+		   )
 		  ((eq? 'row2 this-row)
 		   (print "ROW2")
 		   (print row1 row2))))))
