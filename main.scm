@@ -179,36 +179,7 @@
 	((= counter 2) "desc")
 	((= counter 3) "tags")))
 
-(define (splitter args) ;; used to have several args
-  (let ((row1 (car args))
-	(row2 (car (cdr args)))
-	(row3 (car (cdr (cdr args))))
-	(i (car (cdr (cdr (cdr args))))))
-   (if (> i 3)
-       ;; (parse-row 'row2 first-row next-row '() 0)
-       (parse-row (string->symbol
-		   (string-append "row" (number->string (+ i 1))))
-		  first-row next-row '() 0)
-      (let* ((split-list (split-row (select-column i) 10))
-	    (next-column (select-column i))
-	    (rows (cond ((= i 1)
-			 (append row1 (list (car split-list)))
-			 (append row2 (list (cdr split-list)))
-			 row3
-			 (+ i 1))
-			((= i 2)
-			 row1
-			 (append row2 (list (car split-list)))
-			 (append row3 (list (cdr split-list)))
-			 (+ i 1))
-			((= i 3)
-			 row1
-			 row2
-			 (append row3 (list (car split-list)))
-			 (+ i 1)))))
-	(if (> (length split-list) 0)
-	    (splitter rows)))) )
-  )
+
 
 
 (define (create-rows row-list)
@@ -216,6 +187,38 @@
 	(cmd (car (cdr row-list)))
 	(desc (car (cdr (cdr row-list))))
 	(tags (string-join (cdr (cdr (cdr row-list))) " ")))
+
+    (define (splitter args) ;; used to have several args
+      (let ((row1 (car args))
+	    (row2 (car (cdr args)))
+	    (row3 (car (cdr (cdr args))))
+	    (i (car (cdr (cdr (cdr args))))))
+	(if (> i 3)
+	    ;; (parse-row 'row2 first-row next-row '() 0)
+	    (parse-row (string->symbol
+			(string-append "row" (number->string (+ i 1))))
+		       row1 row2 row3 0)
+	    (let* ((split-list (split-row (select-column i) 10))
+		   (next-column (select-column i))
+		   (rows (cond ((= i 1)
+				(list (append row1 (list (car split-list)))
+				 (append row2 (list (cdr split-list)))
+				 row3
+				 (+ i 1)))
+			       ((= i 2)
+				(list row1
+				 (append row2 (list (car split-list)))
+				 (append row3 (list (cdr split-list)))
+				 (+ i 1)))
+			       ((= i 3)
+				(list row1
+				 row2
+				 (append row3 (list (car split-list)))
+				 (+ i 1))))))
+	      (if (> (length split-list) 0)
+		  (splitter rows)))) )
+      )
+    
     (define (parse-row this-row row1 row2 row3 j)
       (let ((row1 row1)
 	    (row2 row2)
