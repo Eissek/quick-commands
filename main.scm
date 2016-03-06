@@ -174,10 +174,10 @@
 
 
 
-(define (select-column counter)
-  (cond ((= counter 1) "cmd")
-	((= counter 2) "desc")
-	((= counter 3) "tags")))
+;; (define (select-column counter)
+;;   (cond ((= counter 1) 'cmd)
+;; 	((= counter 2) "desc")
+;; 	((= counter 3) "tags")))
 
 
 
@@ -188,35 +188,88 @@
 	(desc (car (cdr (cdr row-list))))
 	(tags (string-join (cdr (cdr (cdr row-list))) " ")))
 
-    (define (splitter args) ;; used to have several args
-      (let ((row1 (car args))
-	    (row2 (car (cdr args)))
-	    (row3 (car (cdr (cdr args))))
-	    (i (car (cdr (cdr (cdr args))))))
-	(if (> i 3)
-	    ;; (parse-row 'row2 first-row next-row '() 0)
-	    (parse-row (string->symbol
-			(string-append "row" (number->string (+ i 1))))
-		       row1 row2 row3 0)
-	    (let* ((split-list (split-row (select-column i) 10))
-		   (next-column (select-column i))
-		   (rows (cond ((= i 1)
-				(list (append row1 (list (car split-list)))
-				 (append row2 (list (cdr split-list)))
-				 row3
-				 (+ i 1)))
-			       ((= i 2)
-				(list row1
-				 (append row2 (list (car split-list)))
-				 (append row3 (list (cdr split-list)))
-				 (+ i 1)))
-			       ((= i 3)
-				(list row1
-				 row2
-				 (append row3 (list (car split-list)))
-				 (+ i 1))))))
-	      (if (> (length split-list) 0)
-		  (splitter rows)))) )
+    (define (select-column counter)
+      (cond ((= counter 1) cmd)
+	    ((= counter 2) desc)
+	    ((= counter 3) tags)))
+    
+    (define (splitter row1 row2 row3 i) ;; used to have several args
+      (if (> i 3)
+	  ;; (parse-row 'row2 first-row next-row '() 0)
+	  (let ((select-row (string->symbol
+			     (string-append "row" (number->string (+ i 1))))))
+	      (cond ((= i 1) (parse-row select-row row1 row2 row3 0)) ))
+	  ;; (begin (parse-row (string->symbol
+	  ;; 		     (string-append "row" (number->string (+ i 1))))
+	  ;; 		    row1 row2 row3 0)
+	  ;; 	 (print row2))
+	  
+
+	  (let ((split-list (split-row (select-column i) 10))
+		(position (+ i 1)))
+	    ;; (if (> (length split-list) 1)
+	    ;;  (cond ((= i 1)
+	    ;; 	    (splitter (append row1 (list (car split-list)))
+	    ;; 		      (append row2 (list (car (cdr split-list))))
+	    ;; 		      row3 position))
+	    ;; 	   ((= i 2)
+	    ;; 	    (splitter row1
+	    ;; 		      (append row2 (list (car split-list)))
+	    ;; 		      (append row3 (list (car (cdr split-list))))
+	    ;; 		      position))
+	    ;; 	   ((= i 3)
+	    ;; 	    (splitter row1 row2
+	    ;; 		      (append row3 (list (car split-list)))
+	    ;; 		      position))))
+
+	    ;; Should divide into two rows
+	    (if (= (length split-list) 1)
+	    	(splitter (append current-row (list (car split-list))) (append next-row '()) i )
+	    	(splitter (append current-row (list (car split-list))) (append next-row (cdr split-list))))
+	    )
+
+
+	  
+	  ;; (let* ((split-list (split-row (select-column i) 10))
+	  ;; 	 (next-column (select-column i))
+	  ;; 	 ;; (rows (cond ((= i 1)
+	  ;; 	 ;; 		(list (append row1 (list (car split-list)))
+	  ;; 	 ;; 		 (append row2 (list (cdr split-list)))
+	  ;; 	 ;; 		 row3
+	  ;; 	 ;; 		 (+ i 1)))
+	  ;; 	 ;; 	       ((= i 2)
+	  ;; 	 ;; 		(list row1
+	  ;; 	 ;; 		 (append row2 (list (car split-list)))
+	  ;; 	 ;; 		 (append row3 (list (cdr split-list)))
+	  ;; 	 ;; 		 (+ i 1)))
+	  ;; 	 ;; 	       ((= i 3)
+	  ;; 	 ;; 		(list row1
+	  ;; 	 ;; 		 row2
+	  ;; 	 ;; 		 (append row3 (list (car split-list)))
+	  ;; 	 ;; 		 (+ i 1)))))
+	  ;; 	 )
+	  ;;   (print "yes " split-list)
+	  ;;   (if (= (length split-list) 1)
+	  ;; 	(cond ((= i 1)
+	  ;; 	       (splitter (append row1 (list (car split-list))) row2 row3 (+ i 1)))
+	  ;; 	      ((= i 2)
+	  ;; 	       (splitter row1 (append row2 (list (car split-list))) row3  (+ i 1)))
+	  ;; 	      ((= i 3)
+	  ;; 	       (splitter row1 row2 (append row3 (list (car split-list))) (+ i 1))))
+	  ;; 	(cond ((= i 1)
+	  ;; 	       (splitter (append row1 (list (car split-list)))
+	  ;; 			 (append row2 (list (car (cdr split-list)))) row3 (+ i 1)))
+	  ;; 	      ((= i 2)
+	  ;; 	       (splitter row1
+	  ;; 			 (append row2 (list (car split-list)))
+	  ;; 			 (append row3 (list (car (cdr split-list)))) (+ i 1)))
+	  ;; 	      ((= i 3)
+	  ;; 	       (splitter row1 row2 (append row3 (list (car (cdr split-list)))) (+
+	  ;; 										i 1))))
+	  ;; 	;; (begin ;; (print split-list)
+	  ;; 	;;  (splitter rows))
+	  ;; 	))
+	  ) 
       )
     
     (define (parse-row this-row row1 row2 row3 j)
@@ -232,7 +285,9 @@
 	(if (< (length (list this-row)) 3)
 	    
 	    (cond ((eq? 'row1 this-row)
-		   (splitter (list row1 row2 row3 1))
+		   (print "YEAAAAAAAh")
+		   ;; (splitter (list row1 row2 row3 1))
+		   (splitter row1 row2 row3 1)
 		   ;; (letrec ((splitter
 		   ;; 	     (lambda (first-row next-row i)
 		   ;; 	       (if (> i 3)
