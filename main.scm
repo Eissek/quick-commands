@@ -188,87 +188,75 @@
 	(desc (car (cdr (cdr row-list))))
 	(tags (string-join (cdr (cdr (cdr row-list))) " ")))
 
-    (define (select-column counter)
-      (cond ((= counter 1) cmd)
-	    ((= counter 2) desc)
-	    ((= counter 3) tags)))
+    (define (select-column counter column-list)
+      (cond ((= counter 1) (car (cdr columm-list)))
+	    ((= counter 2) (car (cdr (cdr columm-list))))
+	    ((= counter 3) (cdr (cdr (cdr row-list))))))
+
+    (define (select-column2 counter ;; column-list
+			    current)
+      (cond ((eq? current 'row1)
+	     (cond ((= counter 1) cmd)
+		   ((= counter 2) desc)
+		   ((= counter 3) tags)))
+	    ((or (eq? current 'row2) (eq? current 'row3))
+	     (cond ((= counter 1) 'column1)
+		   ((= counter 2) 'column2)
+		   ((= counter 3) 'column3)))))
     
-    (define (splitter row1 row2 row3 i) ;; used to have several args
-      (if (> i 3)
+    (define (splitter column1 column2 column3 counter current) ;; used to have several args
+      ;; (print "row3 " row3)
+      
+      (if (> counter  3) ;; counts the number of times splitter has executed
 	  ;; (parse-row 'row2 first-row next-row '() 0)
-	  (let ((select-row (string->symbol
-			     (string-append "row" (number->string (+ i 1))))))
-	      (cond ((= i 1) (parse-row select-row row1 row2 row3 0)) ))
-	  ;; (begin (parse-row (string->symbol
-	  ;; 		     (string-append "row" (number->string (+ i 1))))
-	  ;; 		    row1 row2 row3 0)
-	  ;; 	 (print row2))
+	  (cond ((eq? current 'row1) (parse-row 'row2 column1 column2 column3 0))
+		((eq? current 'row2) (print "YAHAHAH"))
+		((eq? current 'row3) (print "naaaaaaaah")))
 	  
-
-	  (let ((split-list (split-row (select-column i) 10))
-		(position (+ i 1)))
+	  (let ((split-list
+		 (split-row
+		  (select-column2 counter current) 10))
+		(position (+ counter 1)))
+	    (print "split-row" split-list)
 	    ;; (if (> (length split-list) 1)
-	    ;;  (cond ((= i 1)
-	    ;; 	    (splitter (append row1 (list (car split-list)))
-	    ;; 		      (append row2 (list (car (cdr split-list))))
-	    ;; 		      row3 position))
-	    ;; 	   ((= i 2)
-	    ;; 	    (splitter row1
-	    ;; 		      (append row2 (list (car split-list)))
-	    ;; 		      (append row3 (list (car (cdr split-list))))
-	    ;; 		      position))
-	    ;; 	   ((= i 3)
-	    ;; 	    (splitter row1 row2
-	    ;; 		      (append row3 (list (car split-list)))
-	    ;; 		      position))))
-
+	    ;; 	(splitter (append)))
+	    
+	    (if (> (length split-list) 1)
+		(cond ((eq? current 'row1)
+		       (splitter (append column1 (list (car split-list)))
+				 (append column2 (list (car (cdr split-list))))
+				 column3 position current))
+		      ((eq? current 'row2)
+		       (splitter column1
+				 (append column2 (list (car split-list)))
+				 (append column3 (list (car split-list)))
+				 position current)))
+		
+		;; (cond ((= counter 1)
+	    	;;     (splitter (append row1 (list (car split-list)))
+	    	;; 	      (append row2 (list (car (cdr split-list))))
+	    	;; 	      row3 position current))
+	    	;;    ((= counter 2)
+		;;     (print "car " (car split-list) "cdr "
+		;; 	   (car (cdr split-list)))
+	    	;;     (splitter row1
+	    	;; 	      (append row2 (list (car split-list)))
+	    	;; 	      (append row3 (list (car (cdr split-list))))
+	    	;; 	      position current))
+	    	;;    ((= counter 3)
+	    	;;     (splitter row1 row2
+	    	;; 	      (append row3 (list (car split-list)))
+	    	;; 	      position current)))
+		)
+	    
 	    ;; Should divide into two rows
-	    (if (= (length split-list) 1)
-	    	(splitter (append current-row (list (car split-list))) (append next-row '()) i )
-	    	(splitter (append current-row (list (car split-list))) (append next-row (cdr split-list))))
+	    ;; (if (= (length split-list) 1)
+	    ;; 	(splitter
+	    ;; 	 (append current-row (list (car split-list))) (append next-row '()) position current )
+	    ;; 	(splitter
+	    ;; 	 (append current-row (list (car split-list))) (append next-row (cdr split-list)) position current))
 	    )
 
-
-	  
-	  ;; (let* ((split-list (split-row (select-column i) 10))
-	  ;; 	 (next-column (select-column i))
-	  ;; 	 ;; (rows (cond ((= i 1)
-	  ;; 	 ;; 		(list (append row1 (list (car split-list)))
-	  ;; 	 ;; 		 (append row2 (list (cdr split-list)))
-	  ;; 	 ;; 		 row3
-	  ;; 	 ;; 		 (+ i 1)))
-	  ;; 	 ;; 	       ((= i 2)
-	  ;; 	 ;; 		(list row1
-	  ;; 	 ;; 		 (append row2 (list (car split-list)))
-	  ;; 	 ;; 		 (append row3 (list (cdr split-list)))
-	  ;; 	 ;; 		 (+ i 1)))
-	  ;; 	 ;; 	       ((= i 3)
-	  ;; 	 ;; 		(list row1
-	  ;; 	 ;; 		 row2
-	  ;; 	 ;; 		 (append row3 (list (car split-list)))
-	  ;; 	 ;; 		 (+ i 1)))))
-	  ;; 	 )
-	  ;;   (print "yes " split-list)
-	  ;;   (if (= (length split-list) 1)
-	  ;; 	(cond ((= i 1)
-	  ;; 	       (splitter (append row1 (list (car split-list))) row2 row3 (+ i 1)))
-	  ;; 	      ((= i 2)
-	  ;; 	       (splitter row1 (append row2 (list (car split-list))) row3  (+ i 1)))
-	  ;; 	      ((= i 3)
-	  ;; 	       (splitter row1 row2 (append row3 (list (car split-list))) (+ i 1))))
-	  ;; 	(cond ((= i 1)
-	  ;; 	       (splitter (append row1 (list (car split-list)))
-	  ;; 			 (append row2 (list (car (cdr split-list)))) row3 (+ i 1)))
-	  ;; 	      ((= i 2)
-	  ;; 	       (splitter row1
-	  ;; 			 (append row2 (list (car split-list)))
-	  ;; 			 (append row3 (list (car (cdr split-list)))) (+ i 1)))
-	  ;; 	      ((= i 3)
-	  ;; 	       (splitter row1 row2 (append row3 (list (car (cdr split-list)))) (+
-	  ;; 										i 1))))
-	  ;; 	;; (begin ;; (print split-list)
-	  ;; 	;;  (splitter rows))
-	  ;; 	))
 	  ) 
       )
     
@@ -286,8 +274,8 @@
 	    
 	    (cond ((eq? 'row1 this-row)
 		   (print "YEAAAAAAAh")
-		   ;; (splitter (list row1 row2 row3 1))
-		   (splitter row1 row2 row3 1)
+		   (splitter row1 row2 row3 1 'row1)
+		   ;; (splitter row1 row2 row3 1 'row1)
 		   ;; (letrec ((splitter
 		   ;; 	     (lambda (first-row next-row i)
 		   ;; 	       (if (> i 3)
@@ -309,6 +297,7 @@
 		   ;;   (splitter row1 row2 1))
 		   )
 		  ((eq? 'row2 this-row)
+		   ;; (splitter row1 row2 row3 2 'row2) ;; could use this-row
 		   (print "ROW2")
 		   (print row1 row2))))))
     (parse-row 'row1 '() '() '() 1)))
