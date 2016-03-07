@@ -228,8 +228,18 @@
 				 column3 position current))
 		      ((eq? current 'row2)
 		       (splitter column1
-				 (append column2 (list (car split-list)))
+				 ;; no append because row2 is being split, row2 is replaced
+				 (list (car split-list)) 
 				 (append column3 (list (car split-list)))
+				 position current)
+		       ;; (splitter column1
+		       ;; 		 (append column2 (list (car split-list)))
+		       ;; 		 (append column3 (list (car split-list)))
+		       ;; 		 position current)
+		       )
+		      ((eq? current 'row3)
+		       (splitter column1 column2
+				 (list (car split-list))
 				 position current)))
 		
 		;; (cond ((= counter 1)
@@ -299,7 +309,7 @@
 		  ((eq? 'row2 this-row)
 		   ;; (splitter row1 row2 row3 2 'row2) ;; could use this-row
 		   (print "ROW2")
-		   (print row1 row2))))))
+		   (print row1 row2 row3))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
