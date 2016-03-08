@@ -221,7 +221,7 @@
       (if (> counter  3) ;; counts the number of times splitter has executed
 	  ;; (parse-row 'row2 first-row next-row '() 0)
 	  (cond ((eq? current 'row1) (parse-row 'row2 column1 column2 column3 0))
-		((eq? current 'row2) (print "YAHAHAH")  ) ;;NEED TO DROP FIRST THREE
+		((eq? current 'row2) (print "YAHAHAH") (parse-row 'row3 column1 (drop column2 3) column3 0)  ) ;;NEED TO DROP FIRST THREE
 		((eq? current 'row3) (print "naaaaaaaah")))
 	  
 	  (let ((split-list
@@ -324,7 +324,7 @@
 		   (print row1 row2 row3))
 		  ((eq? 'row3 this-row)
 		   (print "ROW3")
-		   (print row1 row2 row))))))
+		   (print row1 row2 row3))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
