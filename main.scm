@@ -194,28 +194,39 @@
 	    ((= counter 3) (cdr (cdr (cdr row-list))))))
 
     (define (select-column2 counter ;; column-list
-			    current)
+			    current row-list)
+      (print current " ROWS: " row-list)
       (cond ((eq? current 'row1)
 	     (cond ((= counter 1) cmd)
 		   ((= counter 2) desc)
 		   ((= counter 3) tags)))
-	    ((or (eq? current 'row2) (eq? current 'row3))
-	     (cond ((= counter 1) 'column1)
-		   ((= counter 2) 'column2)
-		   ((= counter 3) 'column3)))))
+	    ((eq? current 'row2)
+	     (let ((rows (car (cdr row-list))))
+	       (print "my rows" rows)
+	       (cond ((= counter 1) (car rows) )
+		     ((= counter 2) (car (cdr rows)))
+		     ;; may not need to get list from 3rd
+		     ((= counter 3) (car (cdr (cdr rows)))))))
+	    
+	    ((eq? current 'row3)
+	     (let ((rows (car (cdr (cdr row-list)))))
+	       (cond ((= counter 1) (car rows) )
+		     ((= counter 2) (car (cdr rows)))
+		     ((= counter 3) (car (cdr (cdr rows)))))))))
     
     (define (splitter column1 column2 column3 counter current) ;; used to have several args
       ;; (print "row3 " row3)
-      
+      (print "col1 " column1)
+      (print "column2 " column2)
       (if (> counter  3) ;; counts the number of times splitter has executed
 	  ;; (parse-row 'row2 first-row next-row '() 0)
 	  (cond ((eq? current 'row1) (parse-row 'row2 column1 column2 column3 0))
-		((eq? current 'row2) (print "YAHAHAH"))
+		((eq? current 'row2) (print "YAHAHAH")  ) ;;NEED TO DROP FIRST THREE
 		((eq? current 'row3) (print "naaaaaaaah")))
 	  
 	  (let ((split-list
 		 (split-row
-		  (select-column2 counter current) 10))
+		  (select-column2 counter current (list column1 column2 column3)) 10))
 		(position (+ counter 1)))
 	    (print "split-row" split-list)
 	    ;; (if (> (length split-list) 1)
@@ -229,7 +240,7 @@
 		      ((eq? current 'row2)
 		       (splitter column1
 				 ;; no append because row2 is being split, row2 is replaced
-				 (list (car split-list)) 
+				 (append column2 (list (car split-list))) 
 				 (append column3 (list (car split-list)))
 				 position current)
 		       ;; (splitter column1
@@ -307,9 +318,13 @@
 		   ;;   (splitter row1 row2 1))
 		   )
 		  ((eq? 'row2 this-row)
-		   ;; (splitter row1 row2 row3 2 'row2) ;; could use this-row
+		   ;; change counter to 1 from 2
+		   (splitter row1 row2 row3 1 'row2) ;; could use this-row
 		   (print "ROW2")
-		   (print row1 row2 row3))))))
+		   (print row1 row2 row3))
+		  ((eq? 'row3 this-row)
+		   (print "ROW3")
+		   (print row1 row2 row))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
