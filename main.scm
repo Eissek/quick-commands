@@ -263,28 +263,7 @@
 	    
 	    (cond ((eq? 'row1 this-row)
 		   (print "YEAAAAAAAh")
-		   (splitter row1 row2 row3 1 'row1)
-		   ;; (splitter row1 row2 row3 1 'row1)
-		   ;; (letrec ((splitter
-		   ;; 	     (lambda (first-row next-row i)
-		   ;; 	       (if (> i 3)
-		   ;; 		   (parse-row 'row2 first-row next-row '() 0) ;;maybe use next-row as selected row
-		   ;; 		   (let ((split-list (split-row (select-column i) 10))
-		   ;; 			 (next-column (select-column i)))
-		   ;; 		     (if (= (length split-list) 1)
-		   ;; 			 (splitter
-		   ;; 			  (append
-		   ;; 			   first-row split-list
-		   ;; 			   next-row
-		   ;; 			   (+ i 1)))
-		   ;; 			 (splitter
-		   ;; 			  (append first-row (list (car split-list)))
-		   ;; 			  (append next-row (list (car (cdr split-list))))
-		   ;; 			  (+ i 1)
-		   ;; 			  ;; next-column
-		   ;; 			  )))))))
-		   ;;   (splitter row1 row2 1))
-		   )
+		   (splitter row1 row2 row3 1 'row1))
 		  ((eq? 'row2 this-row)
 		   ;; change counter to 1 from 2
 		   ;; because the counter needs to start from beginning
@@ -299,7 +278,15 @@
 		   )
 		  (else (print  (string-append "|"
 				 (string-join (flatten (map (lambda (rows)
-							      (append rows '("\n"))) (list row1 row2)) row3) "|" 'suffix )) ))))))
+							      (cond ((eq? rows row1)
+								     (append '("    ") rows '("\n")))
+								    ((eq? rows row2)
+								     (append (list (format " ~a  " rowid)) rows '("\n")))
+								    ((eq? rows row3)
+								     (append '("    ") rows ))
+								  ;; (append rows '("\n"))
+								  )
+							      ) (list row1 row2 row3)) ) "|" 'suffix )) ))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
