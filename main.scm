@@ -297,8 +297,9 @@
 		   (splitter row1 row2 row3 1 'row3)
 		   ;; (print row1 row2 row3)
 		   )
-		  (else (print  (string-join (flatten (map (lambda (rows)
-						 (append rows '("\n"))) (list row1 row2 row3))) "|" 'prefix ) ))))))
+		  (else (print  (string-append "|"
+				 (string-join (flatten (map (lambda (rows)
+							      (append rows '("\n"))) (list row1 row2)) row3) "|" 'suffix )) ))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
