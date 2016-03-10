@@ -278,15 +278,15 @@
 		   )
 		  (else (print  (string-append "|"
 				 (string-join (flatten (map (lambda (rows)
-							      (cond ((eq? rows row1)
-								     (append '("    ") rows '("\n")))
+							      (let ((four-spaces (make-string 4 #\space)))
+								(cond ((eq? rows row1)
+								     (append (list four-spaces) rows '("\n")))
 								    ((eq? rows row2)
 								     (append (list (format " ~a  " rowid)) rows '("\n")))
 								    ((eq? rows row3)
-								     (append '("    ") rows ))
+								     (append (list four-spaces) rows ))
 								  ;; (append rows '("\n"))
-								  )
-							      ) (list row1 row2 row3)) ) "|" 'suffix )) ))))))
+								  ))) (list row1 row2 row3)) ) "|" 'suffix )) ))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
