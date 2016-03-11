@@ -179,7 +179,11 @@
 ;; 	((= counter 2) "desc")
 ;; 	((= counter 3) "tags")))
 
-
+(define (id-column-pos rowid)
+  (let ((char-length (string-length (if (number? rowid) (number->string rowid) rowid))))
+    (cond ((= char-length 1) (format " ~a  " rowid))
+	  ((= char-length 2) (format " ~a " rowid))
+	  ((= char-length 3) (format " ~a" rowid)))))
 
 
 (define (create-rows row-list)
@@ -187,11 +191,6 @@
 	(cmd (car (cdr row-list)))
 	(desc (car (cdr (cdr row-list))))
 	(tags (string-join (cdr (cdr (cdr row-list))) " ")))
-
-    ;; (define (select-column counter column-list)
-    ;;   (cond ((= counter 1) (car (cdr columm-list)))
-    ;; 	    ((= counter 2) (car (cdr (cdr columm-list))))
-    ;; 	    ((= counter 3) (cdr (cdr (cdr row-list))))))
 
     (define (select-column2 counter ;; column-list
 			    current row-list)
@@ -282,7 +281,7 @@
 								(cond ((eq? rows row1)
 								     (append (list four-spaces) rows '("\n")))
 								    ((eq? rows row2)
-								     (append (list (format " ~a  " rowid)) rows '("\n")))
+								     (append (list (id-column-pos rowid)) rows '("\n")))
 								    ((eq? rows row3)
 								     (append (list four-spaces) rows ))
 								  ;; (append rows '("\n"))
