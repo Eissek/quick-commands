@@ -185,6 +185,10 @@
 	  ((= char-length 2) (format " ~a " rowid))
 	  ((= char-length 3) (format " ~a" rowid)))))
 
+(define (bottom-line)
+  (let ((start "+----+")
+	(line (string-append (make-string 10 #\-) "+")))
+    (string-append start line line line)))
 
 (define (create-rows row-list)
   (let ((rowid (car row-list))
@@ -285,7 +289,8 @@
 								    ((eq? rows row3)
 								     (append (list four-spaces) rows ))
 								  ;; (append rows '("\n"))
-								  ))) (list row1 row2 row3)) ) "|" 'suffix )) ))))))
+								  ))) (list row1 row2 row3)) ) "|" 'suffix )))
+			(print (bottom-line)))))))
     (parse-row 'row1 '() '() '() 1)))
 
 
