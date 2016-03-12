@@ -121,17 +121,6 @@
   (prepare qcommands-db "SELECT rowid, Command, Description, Tags FROM commands;"))
 
 
-(define (list-stored-commands .)
-  (call-with-current-continuation
-   (lambda (k)
-     (with-exception-handler
-      (lambda (x)
-        (k "Error. Could not list commands")
-        (print ((condition-property-accessor 'exn 'message) x)))
-      (lambda ()
-        (let ((command (map-row create-rows select-all)))
-          command))))))
-
 
 (define (print-commands-table .)
   (print "hi"))
@@ -304,6 +293,18 @@
     (parse-row 'row1 '() '() '() 1)))
 
 
+(define (list-stored-commands .)
+  (call-with-current-continuation
+   (lambda (k)
+     (with-exception-handler
+      (lambda (x)
+        (k "Error. Could not list commands")
+        (print ((condition-property-accessor 'exn 'message) x)))
+      (lambda ()
+	(commands-table-headings)
+        (let ((command (map-row create-rows select-all)))
+	  
+          command))))))
 
 ;; (define (create-rows row-list)
 ;;   (let ((rowid (car row-list))
