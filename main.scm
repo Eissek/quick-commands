@@ -149,6 +149,7 @@
 ;; (define (add-newline str)
 ;;   )
 
+
 (define (split-row str length)
   (let ((split (if (< (string-length str) 10)
 		   (append (list (fill-remainder str length #\space)
@@ -189,6 +190,17 @@
   (let ((start "+----+")
 	(line (string-append (make-string 10 #\-) "+")))
     (string-append start line line line)))
+
+(define (commands-table-headings)
+  (let* ((three-spc (make-string 3 #\space))
+	 (rowid " id ")
+	 (cmd (string-append
+	       (make-string 4 #\space) "cmd" three-spc))
+	 (desc (string-append three-spc "desc" three-spc))
+	 (tags (string-append three-spc "tags" three-spc)))
+    (print (bottom-line))
+    (print "|" (string-join (list rowid cmd desc tags) "|" 'suffix))
+    (print (bottom-line))))
 
 (define (create-rows . row-list)
   (let ((rowid (car row-list))
