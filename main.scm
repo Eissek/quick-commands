@@ -190,7 +190,7 @@
 	(line (string-append (make-string 10 #\-) "+")))
     (string-append start line line line)))
 
-(define (create-rows row-list)
+(define (create-rows . row-list)
   (let ((rowid (car row-list))
 	(cmd (car (cdr row-list)))
 	(desc (car (cdr (cdr row-list))))
@@ -224,8 +224,8 @@
       (if (> counter  3) ;; counts the number of times splitter has executed
 	  ;; (parse-row 'row2 first-row next-row '() 0)
 	  (cond ((eq? current 'row1) (parse-row 'row2 column1 column2 column3 0))
-		((eq? current 'row2) (print "YAHAHAH") (parse-row 'row3 column1 (drop column2 3) column3 0)  ) ;;NEED TO DROP FIRST THREE
-		((eq? current 'row3) (print "naaaaaaaah") (parse-row 'row column1 column2 (drop column3 3) 0) ))
+		((eq? current 'row2) (parse-row 'row3 column1 (drop column2 3) column3 0)  ) ;;NEED TO DROP FIRST THREE
+		((eq? current 'row3) (parse-row 'row column1 column2 (drop column3 3) 0) ))
 	  
 	  (let ((split-list
 		 (split-row
@@ -265,7 +265,6 @@
 	(if (< (length (list this-row)) 3)
 	    
 	    (cond ((eq? 'row1 this-row)
-		   (print "YEAAAAAAAh")
 		   (splitter row1 row2 row3 1 'row1))
 		  ((eq? 'row2 this-row)
 		   ;; change counter to 1 from 2
@@ -275,7 +274,6 @@
 		   ;; (print row1 row2 row3)
 		   )
 		  ((eq? 'row3 this-row)
-		   (print "ROW3")
 		   (splitter row1 row2 row3 1 'row3)
 		   ;; (print row1 row2 row3)
 		   )
