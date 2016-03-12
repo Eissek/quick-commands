@@ -302,9 +302,12 @@
         (print ((condition-property-accessor 'exn 'message) x)))
       (lambda ()
 	(commands-table-headings)
-        (let ((command (map-row create-rows select-all)))
+	;; (map-row create-rows select-all)
+	(for-each-row create-rows select-all)
+        ;; (let ((command (map-row create-rows select-all)))
 	  
-          command))))))
+        ;;   command)
+	)))))
 
 ;; (define (create-rows row-list)
 ;;   (let ((rowid (car row-list))
