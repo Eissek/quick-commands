@@ -13,7 +13,10 @@
 (require-extension args)
 
 (define (print-n-format arg)
-  (display (string-join (append arg '("\n")))))
+  (print arg))
+
+;; (define (print-n-format arg)
+;;   (display (string-join (append arg '("\n")))))
 
 (define (handle-cmd-line-arguments PROC option)
   ;; parses the cmdline args by getting the data

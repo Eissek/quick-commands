@@ -19,11 +19,11 @@
 
 ;; (print "hello")
 
-;; (define db-path (string-append
-;;                  (get-environment-variable "HOME") "/qcommands.db"))
+(define db-path (string-append
+                 (get-environment-variable "HOME") "/qcommands.db"))
 
-(define db-path
-  "/media/sf_Projects/Chicken/quick-commands/test-db/qcommands-test.db")
+;; (define db-path
+;;   "/media/sf_Projects/Chicken/quick-commands/test-db/qcommands-test.db")
 
 ;; maybe create database from schema if not found
 (if (not (file-exists? db-path))
