@@ -2,6 +2,7 @@
 #############
 release/
 test-db/
+chicken-4.10.0/
 
 # Compiled source #
 ###################
