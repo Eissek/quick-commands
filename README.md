@@ -3,7 +3,13 @@ A command line application that stores commands (or any data) that needs to be r
 
 I developed this small app just because I always struggled to remember certain key combinations for emacs and linux commands. Really it can be used to stored any information you want to remember not just commands.
 
-## Download
+## Screenshots
+![Image of qcommands table 1](https://github.com/Eissek/quick-commands/screenshots/qcommands-table.png)
+
+![Image of qcommands table 2](https://github.com/Eissek/quick-commands/screenshots/qc-table2.png)
+
+
+## Binaries
 ### Linux
 ####x86-64
 Get latest version [here](https://github.com/Eissek/quick-commands/releases)  
@@ -71,10 +77,10 @@ Use the following to add a command, replace the placeholders your own data:
 './qc -a "COMMAND HERE" "DESCRIPTION HERE" "TAGS"` 
 
 
-### Advanced
+### Advance   
 #### CHICKEN Installation
 To compile and build quick-commands from scratch you will need to use the CHICKEN Scheme to C Compiler.   
-##### Linux users
+##### Linux users   
 CHICKEN should be available in most package management systems, although it's not always the latest version.   
 It already comes as part of Debian and Ubuntu.   
 For more details on the Linux availability check [here](http://wiki.call-cc.org/platforms#linux)   
