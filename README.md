@@ -4,15 +4,15 @@ A command line application that stores commands (or any data) that needs to be r
 I developed this small app just because I always struggled to remember certain key combinations for emacs and linux commands. Really it can be used to stored any information you want to remember not just commands.
 
 ## Screenshots
-![Image of qcommands table 1](https://github.com/Eissek/quick-commands/blob/master/screenshots/qcommands-table.png)
+![Image of qcommands table 1](https://github.com/MisterTerrific/quick-commands/blob/master/screenshots/qcommands-table.png)
 
-![Image of qcommands table 2](https://github.com/Eissek/quick-commands/blob/master/screenshots/qc-table2.png)
+![Image of qcommands table 2](https://github.com/MisterTerrific/quick-commands/blob/master/screenshots/qc-table2.png)
 
 
 ## Binaries
 ### Linux
 ####x86-64
-Get latest version [here](https://github.com/Eissek/quick-commands/releases)  
+Get latest version [here](https://github.com/MisterTerrific/quick-commands/releases)  
 
 ### Windows
 tbc
